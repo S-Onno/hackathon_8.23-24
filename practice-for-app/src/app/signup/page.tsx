@@ -1,12 +1,12 @@
 import Link from "next/link";
 
-export default function SighnUpPage() {
+export default function SignUpPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-black via-indigo-900 to-purple-900 text-white px-4">
       <div className="max-w-md w-full bg-white text-black p-8 rounded shadow">
         <h2 className="text-2xl font-bold mb-6 text-center">新規登録</h2>
         <form className="space-y-4">
-          <input type="text" placeholder="名前" className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-indigo-500"></input>
+          <input type="text" placeholder="ユーザー名" className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-indigo-500"></input>
           <input type="email" placeholder="メールアドレス" className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-indigo-500"></input>        
           <input type="password" placeholder="パスワード" className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-indigo-500"></input>
           <input type="password" placeholder="パスワード(確認用)" className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-indigo-500"></input>
