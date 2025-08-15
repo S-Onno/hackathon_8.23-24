@@ -1,3 +1,4 @@
+//レイアウトページ
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -24,7 +25,7 @@ export default function RootLayout({children,}: Readonly<{
   return (
     <html lang="ja">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <header className="bg-purple-950 p-4">
+        <header className="bg-[var(--background)] text-[var(--foreground)] p-4" >
           Universe
         </header>
         {children}
