@@ -1,10 +1,14 @@
-import React from 'react'
-import Link from 'next/link';
+"use client"
+
 
 /**
  * 新規ユーザー登録コンポーネント
  * 新規ユーザー登録フォームで変更点がある場合、ここに記述してください。
  */
+
+
+import React from 'react'
+import Link from 'next/link';
 
 const SignUp: React.FC = () => {
   return (

@@ -2,6 +2,7 @@
  * ログインフォームコンポーネント
  * ログインフォームで変更点がある場合、ここに記述してください。
  */
+"use client"
 
 import React from "react";
 import Link from "next/link";
