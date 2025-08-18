@@ -1,5 +1,5 @@
 // pages/home/page.tsx
-import GalaxyMap from '../components/GalaxyMap';
+import GalaxyMap from '../_image/earth.png';
 
 const planets = [
   { id: 'mypage', name: 'mypage', x: 750, y: 300, route: '/mypage', avatar: '/avatars/me.png' },
@@ -11,6 +11,7 @@ const planets = [
 
 export default function HomePage() {
   return (
+
     <main className="min-h-screen">
       <GalaxyMap planets={planets} />
     </main>

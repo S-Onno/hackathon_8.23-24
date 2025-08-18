@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import earthImg from "../_images/earth.png";
+import earthImg from "../_images/earthilust.png";
 import creatureImg from "../_images/creature1.png";
 
 type Creature = {
