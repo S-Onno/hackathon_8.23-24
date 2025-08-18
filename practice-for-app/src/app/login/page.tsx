@@ -1,9 +1,11 @@
 //ログインページです！
 import Link from "next/link";
+import NightStarCanvas from "../components/StarCanvas";
 
 export default function LoginPage() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-black via-indigo-900 to-purple-900 text-white px-4">
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-black text-white px-4">
+        <NightStarCanvas />
       <div className="max-w-md w-full bg-white text-black p-8 rounded shadow">
       <h2 className="text-2xl font-bold mb-6 text-center">ログイン</h2>
       <form className="space-y-4">
