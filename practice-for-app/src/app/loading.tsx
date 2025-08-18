@@ -1,4 +1,6 @@
-//ローディング
+/**
+ * ローディング画面
+ **/
 "use client";
 
 import Image from "next/image";
