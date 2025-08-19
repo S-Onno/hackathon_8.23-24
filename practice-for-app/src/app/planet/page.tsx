@@ -1,8 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import earthImg from "../_images/earthilust.png";
-import creatureImg from "../_images/creature1.png";
 
 type Creature = {
   id: number;
@@ -80,13 +78,13 @@ export default function PlanetPage() {
     <div className="flex justify-center items-center min-h-screen bg-black">
       <div className="relative w-[400px] h-[400px]">
         {/* 惑星 */}
-        <Image src={earthImg} alt="planet" fill className="object-contain" />
+        <Image src="/_images/earthilust.png" alt="planet" fill className="object-contain" />
 
         {/* 生物 */}
         {creatures.map((c) => (
           <Image
             key={c.id}
-            src={creatureImg}
+            src="/_images/creature1.png"
             alt="creature"
             width={50}
             height={50}
