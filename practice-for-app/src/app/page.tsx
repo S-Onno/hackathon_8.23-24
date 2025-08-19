@@ -1,6 +1,7 @@
+"use client"
+
 import NavButton from "./components/NavButton";
 import NightStarCanvas from "./components/StarCanvas";
-import TypingText from "./components/TypingText";
 
 export default function HomePage() {
     return (
