@@ -1,6 +1,10 @@
 'use client';
 import React, { useCallback, useEffect, useState } from 'react';
 import { WordCard } from '@/types/card';
+import NightStarCanvas from "../components/StarCanvas";
+
+
+
 
 export default function QuizPage() {
   const [cards, setCards] = useState<WordCard[]>([]);
@@ -55,6 +59,9 @@ export default function QuizPage() {
   const current = currentIndex === null ? null : cards[currentIndex];
 
   return (
+     <div className="relative w-full min-h-screen">
+      <NightStarCanvas />
+    
     <div style={{ maxWidth: 640, margin: 'auto', padding: 20 }}>
       <h2>単語クイズ</h2>
 
@@ -65,28 +72,29 @@ export default function QuizPage() {
 
       {current ? (
         <>
-          <div style={{ fontSize: 18, padding: 16, border: '1px solid #ddd', borderRadius: 8, marginBottom: 12 }}>
-            <div><b>Q:</b> {current.question}</div>
-            {showAnswer ? <div style={{ marginTop: 8 }}><b>A:</b> {current.answer}</div> : null}
+          <div style={{ padding: 16, border: '1px solid #ddd', borderRadius: 8, marginBottom: 12 }}>
+            <div className="quiz-question"><b>Q:</b> {current.question}</div>
+            {showAnswer ? <div className="quiz-answer" style={{ marginTop: 8 }}><b>A:</b> {current.answer}</div> : null}
           </div>
 
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div style={{ display: 'flex', gap: 12 }}>
             {!showAnswer ? (
-              <button onClick={() => setShowAnswer(true)}>回答を表示</button>
+              <button className="btn btn-primary" onClick={() => setShowAnswer(true)}>回答を表示</button>
             ) : (
-              <button onClick={() => setShowAnswer(false)}>回答を隠す</button>
+              <button className="btn btn-ghost" onClick={() => setShowAnswer(false)}>回答を隠す</button>
             )}
-            <button onClick={nextCard}>次の問題</button>
-            <button onClick={() => { void fetchCards(); }}>カードを再取得</button>
+            <button className="btn btn-primary" onClick={nextCard}>次の問題</button>
+            <button className="btn" onClick={() => { void fetchCards(); }}>カードを再取得</button>
           </div>
 
-          <div style={{ marginTop: 12, color: '#666' }}>
-            ヒント: Space = 回答切替, → = 次の問題
+          <div style={{ marginTop: 20, color: '#666' }}>
+            ショートカットキー | 回答表示: Space = 回答切替, → = 次の問題
           </div>
         </>
       ) : (
-        <div>問題が選ばれていません。<button onClick={nextCard}>次の問題を出す</button></div>
+  <div>問題が選ばれていません。<button className="btn btn-primary" onClick={nextCard}>次の問題を出す</button></div>
       )}
+    </div>
     </div>
   );
 }

@@ -24,3 +24,58 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Simple button utility styles used by the memorize page */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.03);
+  color: #ffffff; /* ボタン文字を白に */
+  font-size: 1.05rem; /* 少し大きめ */
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 120ms ease, transform 80ms ease;
+}
+.btn:hover {
+  transform: translateY(-1px);
+}
+.btn:active {
+  transform: translateY(0);
+}
+.btn-primary {
+  background: #2563eb; /* blue-600 */
+  color: #ffffff;
+  border-color: #1e40af; /* darker blue */
+}
+.btn-primary:hover {
+  background: #1e40af;
+}
+.btn-ghost {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #ffffff; /* ghost ボタンも白文字に */
+}
+.btn-ghost:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* クイズ関連のスタイル */
+
+.quiz-question {
+  font-size: 2rem; /* 大きめ */
+  font-weight: 700;
+  line-height: 1.2;
+}
+.quiz-answer {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-top: 12px;
+}
+@media (max-width: 640px) {
+  .quiz-question { font-size: 1.35rem; }
+  .quiz-answer { font-size: 1.15rem; }
+}
