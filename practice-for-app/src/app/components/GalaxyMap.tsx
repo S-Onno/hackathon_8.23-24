@@ -23,7 +23,7 @@ export default function GalaxyMap({ planets }: GalaxyMapProps) {
             style={{ left: planet.x, top: planet.y }}
           >
             <img
-              src="/_images/earth.png" alt="Earth"
+              src="../_images/earth.png" alt="Earth"
               className="w-16 h-16 rounded-full border-4 border-indigo-500"
             />
             <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 text-white text-sm opacity-0 group-hover:opacity-100 transition">

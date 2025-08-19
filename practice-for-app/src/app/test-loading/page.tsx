@@ -1,10 +1,10 @@
 /**
- * 地球ぐるぐるローディング画面
+ * テスト用地球ぐるぐるローディング画面
  */
 "use client";
 
 import Image from "next/image";
-import earthImg from "../_images/earth.png"; // ここは地球画像のパスに合わせてください
+import earthImg from "../_images/earthilust.png"; // ここは地球画像のパスに合わせてください
 
 export default function Loading() {
   return (
