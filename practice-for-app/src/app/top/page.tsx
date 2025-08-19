@@ -11,7 +11,8 @@ const planets = [
 
 export default function HomePage() {
   return (
-    
+
+  
     <main className="min-h-screen">
       <GalaxyMap planets={planets} />
     </main>

@@ -73,6 +73,7 @@ export default function FriendCardList() {
           className="bg-white rounded-xl shadow-md p-6 w-72 text-center space-y-2"
         >
           <img
+
             src="../_images/earth.png" alt="Earth"
             className="w-20 h-20 rounded-full mx-auto border-4 border-indigo-500"
           />
