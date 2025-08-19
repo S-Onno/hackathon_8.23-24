@@ -13,3 +13,30 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model word_cards {
+  id        Int      @id @default(autoincrement())
+  question  String
+  answer    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+/*
+generator client:
+
+provider = "prisma-client-js"：Prisma Client（TypeScript/JS 用クライアント）を生成する設定です。
+output = "../src/generated/prisma"：生成されたクライアントが src/generated/prisma に書き出されます（リポジトリ内パス）。
+datasource db:
+
+provider = "sqlite"：データソースは SQLite を使う設定です。
+url = env("DATABASE_URL")：接続先は環境変数 DATABASE_URL（例: file:./dev.db）で指定します。
+model word_cards:
+
+id Int @id @default(autoincrement())：主キーの自動増分整数。
+question String：問題テキスト（必須）。
+answer String：解答テキスト（必須）。
+createdAt DateTime @default(now())：作成時刻を自動設定。
+updatedAt DateTime @updatedAt：更新時刻を自動更新。
+*/
