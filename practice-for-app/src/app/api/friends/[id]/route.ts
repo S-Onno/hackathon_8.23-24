@@ -68,7 +68,7 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
       },
     },
   };
-  
+
   const result = mockData[params.id] || {
     name: '不明',
     today: 0,
@@ -77,6 +77,11 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
     lastStudyDate: '',
     message: '',
     studyLogs: [],
+    profile: {
+      name: '不明',
+      goal: '',
+      favoriteSubject: '',
+    },
   };
 
   return new Response(JSON.stringify(result), {

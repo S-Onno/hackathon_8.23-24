@@ -8,7 +8,9 @@ import StudyLogsBar from '../../components/StudyLogsBar';
 import BackTopButton from '../../components/BackTop';
 
 export default function FriendPage() {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params?.id as string; // 型安全に取得
+
   const [friendData, setFriendData] = useState(null);
 
   useEffect(() => {
@@ -30,16 +32,14 @@ export default function FriendPage() {
 
       <h1 className="text-2xl font-semibold mb-2">{friendData.name} さんの惑星</h1>
 
-      {/* メッセージ */}
       {friendData.message && (
         <div className="mt-2 px-4 py-2 bg-indigo-700 rounded-lg text-white text-sm shadow-md max-w-md text-center">
           {friendData.message}
         </div>
       )}
 
-      <div className="mt-4" /> {/* 余白 */}
+      <div className="mt-4" />
 
-      {/* プロフィール */}
       {friendData.profile && (
         <div className="mt-12 w-full max-w-md bg-gray-800 rounded-lg p-4 text-white shadow-md">
           <h2 className="text-lg font-semibold mb-4 text-white">プロフィール</h2>
@@ -49,35 +49,31 @@ export default function FriendPage() {
         </div>
       )}
 
-      <div className="mt-12" /> {/* 余白 */}
+      <div className="mt-12" />
 
-      {/* 学習記録 */}
       {friendData.studyLogs?.length > 0 && (
         <StudyLogsBar logs={friendData.studyLogs} />
       )}
 
-      {/* 学習推移 */}
       <div className="mt-20 w-full">
         <div className="flex-1 min-w-[140px] bg-indigo-700 rounded-md p-4 text-sm text-center shadow-sm">
           <h2 className="text-lg font-semibold mb-4">学習推移</h2>
-            <StudyCard
-              name={friendData.name}
-              today={friendData.today}
-              week={friendData.week}
-              month={friendData.month}
-            />
+          <StudyCard
+            name={friendData.name}
+            today={friendData.today}
+            week={friendData.week}
+            month={friendData.month}
+          />
         </div>
       </div>
 
-      <div className="mt-12" /> {/* 余白 */}
+      <div className="mt-12" />
 
-      {/* 最終学習日 */}
       {friendData.lastStudyDate && (
         <div className="mt-2 text-sm text-gray-300">
           最終学習日：{friendData.lastStudyDate}
         </div>
       )}
-
     </div>
   );
 }
