@@ -33,7 +33,13 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
       profile: {
         name: "やす",
         goal: "成果物の完成を目指しています",
-        favoriteSubject: "Next.jS",
+        { date: "2025-08-17", hours: 2, topic: "Next.js" },
+        { date: "2025-08-16", hours: 1, topic: "Linuc" },
+      ],
+      profile: {
+        name: "やす",
+        goal: "成果物の完成を目指しています",
+        favoriteSubject: "Next.js",
       },
     },
     nakasone: {
