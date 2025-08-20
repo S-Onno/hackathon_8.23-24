@@ -4,6 +4,8 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import StudyCard from '../../components/StudyCard';
 import NavigationBar from '../../components/NavigationBar';
+import StudyLogsBar from '../../components/StudyLogsBar';
+import BackTopButton from '../../components/BackTop';
 
 export default function FriendPage() {
   const { id } = useParams();
@@ -22,13 +24,60 @@ export default function FriendPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e] text-white pt-20 p-10 flex flex-col items-center">
       <NavigationBar />
-      <h1 className="text-2xl mb-6">{friendData.name} さんの学習状況</h1>
-      <StudyCard
-        name={friendData.name}
-        today={friendData.today}
-        week={friendData.week}
-        month={friendData.month}
-      />
+      <div className="mb-2 w-full flex justify-start">
+        <BackTopButton />
+      </div>
+
+      <h1 className="text-2xl font-semibold mb-2">{friendData.name} さんの惑星</h1>
+
+      {/* メッセージ */}
+      {friendData.message && (
+        <div className="mt-2 px-4 py-2 bg-indigo-700 rounded-lg text-white text-sm shadow-md max-w-md text-center">
+          {friendData.message}
+        </div>
+      )}
+
+      <div className="mt-4" /> {/* 余白 */}
+
+      {/* プロフィール */}
+      {friendData.profile && (
+        <div className="mt-12 w-full max-w-md bg-gray-800 rounded-lg p-4 text-white shadow-md">
+          <h2 className="text-lg font-semibold mb-4 text-white">プロフィール</h2>
+          <p><span className="font-semibold">名前:</span> {friendData.profile.name}</p>
+          <p><span className="font-semibold">目標:</span> {friendData.profile.goal}</p>
+          <p><span className="font-semibold">好きな科目:</span> {friendData.profile.favoriteSubject}</p>
+        </div>
+      )}
+
+      <div className="mt-12" /> {/* 余白 */}
+
+      {/* 学習記録 */}
+      {friendData.studyLogs?.length > 0 && (
+        <StudyLogsBar logs={friendData.studyLogs} />
+      )}
+
+      {/* 学習推移 */}
+      <div className="mt-20 w-full">
+        <div className="flex-1 min-w-[140px] bg-indigo-700 rounded-md p-4 text-sm text-center shadow-sm">
+          <h2 className="text-lg font-semibold mb-4">学習推移</h2>
+            <StudyCard
+              name={friendData.name}
+              today={friendData.today}
+              week={friendData.week}
+              month={friendData.month}
+            />
+        </div>
+      </div>
+
+      <div className="mt-12" /> {/* 余白 */}
+
+      {/* 最終学習日 */}
+      {friendData.lastStudyDate && (
+        <div className="mt-2 text-sm text-gray-300">
+          最終学習日：{friendData.lastStudyDate}
+        </div>
+      )}
+
     </div>
   );
 }
