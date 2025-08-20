@@ -7,6 +7,7 @@ const navItems = [
   { label: 'My Page', href: '/mypage' },
   { label: '学習', href: '/study' },
   { label: 'フレンド', href: '/friends' },
+  { label: '単語帳', href: '/word-list' },
 ];
 
 export default function NavigationBar() {

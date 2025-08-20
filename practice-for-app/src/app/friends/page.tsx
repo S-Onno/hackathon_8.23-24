@@ -1,5 +1,4 @@
 import FriendCardList from '../components/FriendCard';
-import Link from "next/link";
 import NavigationBar from '../components/NavigationBar';
 
 export default function FriendPage() {

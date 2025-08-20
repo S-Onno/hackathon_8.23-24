@@ -7,15 +7,19 @@ type Props = {
 
 export default function StudyCard({ name, today, week, month }: Props) {
   return (
-    <div className="bg-white rounded-lg shadow-md p-12 flex items-center gap-8 mb-4 ">
-      <img src="../_images/earth.png" alt="Earth" className="w-24 h-24" />
-      <div className="flex flex-col gap-1">
-        <p className="font-bold text-lg text-black">{name}</p>
-        <p className="text-black">今日の学習：{today}時間</p>
-        <p className="text-black">今週の学習：{week}時間</p>
-        <p className="text-black">今月の学習：{month}時間</p>
+    <div className="w-full bg-indigo-900 text-white py-4 px-6 rounded-lg shadow-md flex justify-around items-center mt-4">
+      <div className="text-center">
+        <p className="text-sm text-gray-300">今日</p>
+        <p className="text-xl font-bold">{today}時間</p>
+      </div>
+      <div className="text-center">
+        <p className="text-sm text-gray-300">今週</p>
+        <p className="text-xl font-bold">{week}時間</p>
+      </div>
+      <div className="text-center">
+        <p className="text-sm text-gray-300">今月</p>
+        <p className="text-xl font-bold">{month}時間</p>
       </div>
     </div>
   );
 }
-
