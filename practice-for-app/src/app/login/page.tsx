@@ -24,6 +24,7 @@ export default function LoginPage() {
                         placeholder="パスワード"
                         className="w-full px-4 py-2 border border-white/20 rounded bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
+                    <Link href="/top">
                     <button
                         type="submit"
                         className="w-full border border-white/30 text-white py-2 rounded bg-transparent 
@@ -33,6 +34,7 @@ export default function LoginPage() {
                     >
                         ログイン
                     </button>
+                    </Link>
 
                     <Link href="/signup">
                         <button
