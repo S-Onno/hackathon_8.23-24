@@ -1,8 +1,8 @@
 "use client"
 
 import Link from "next/link";
-import NightStarCanvas from "../components/StarCanvas";
-import FormWrapper from "../components/FormWrapper";
+import NightStarCanvas from "@/app/components/StarCanvas";
+import FormWrapper from "@/app/components/FormWrapper";
 
 export default function LoginPage() {
     return (

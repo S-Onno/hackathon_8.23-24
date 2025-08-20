@@ -1,4 +1,4 @@
-"use client"
+//"use client"
 
 import NavButton from "./components/NavButton";
 import NightStarCanvas from "./components/StarCanvas";
