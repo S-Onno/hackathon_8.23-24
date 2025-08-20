@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import StudyCard from '../../components/StudyCard';
 import NavigationBar from '../../components/NavigationBar';
 import StudyLogsBar from '../../components/StudyLogsBar';
+import StarCanvas from '../../components/StarCanvas';
 import BackTopButton from '../../components/BackTop';
 
 export default function FriendPage() {
@@ -24,8 +25,9 @@ export default function FriendPage() {
   if (!friendData) return <div className="text-white p-10">読み込み中...</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0f0c29] via-[#302b63] to-[#24243e] text-white pt-20 p-10 flex flex-col items-center">
+    <div className="min-h-screen bg-gradient-to-b from-[#0f0c29] text-white pt-20 p-10 flex flex-col items-center">
       <NavigationBar />
+      <StarCanvas />
 
       <h1 className="text-2xl font-semibold mb-2">{friendData.name} さんの惑星</h1>
 
