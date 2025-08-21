@@ -6,7 +6,6 @@
 import Image from "next/image";
 import NightStarCanvas from "./components/StarCanvas";
 
-
 export default function Loading() {
   return (
     <div className="flex items-center justify-center min-h-screen">
