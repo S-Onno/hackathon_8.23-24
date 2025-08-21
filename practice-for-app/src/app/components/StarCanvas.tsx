@@ -76,10 +76,15 @@ const StarCanvas: React.FC = () => {
             className="absolute top-0 left-0 w-full h-full -z-10"
             style={{ background: "linear-gradient(to top, #101035ff, #132446ff)" }} // 暗い紺色グラデーション
         >
-            <canvas
-                ref={canvasRef}
-                className="absolute top-0 left-0 w-full h-full"
-            />
+            
+        <canvas
+        ref={canvasRef}
+        className="fixed top-0 left-0 w-screen h-screen -z-10 pointer-events-none"
+        style={{
+            background: "linear-gradient(to top, #101035ff, #132446ff)",
+        }}
+        />
+
         </div>
     );
 };
