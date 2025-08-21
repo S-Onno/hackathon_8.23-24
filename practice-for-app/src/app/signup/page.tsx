@@ -43,7 +43,9 @@ export default function SignupPage() {
                     >
                         登録
                     </button>
-
+                    <div className="text-center text-sm text-white/70">
+                        ⬇️すでにアカウントをお持ちですか？⬇️ <Link href="/login"></Link>
+                    </div>
                     <Link href="/login">
                         <button
                             type="button"

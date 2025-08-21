@@ -34,7 +34,7 @@ body {
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   background: rgba(0, 0, 0, 0.03);
-  color: #ffffff; /* ボタン文字を白に */
+  color: #373737; /* ボタン文字を白に */
   font-size: 1.05rem; /* 少し大きめ */
   font-weight: 600;
   cursor: pointer;
@@ -65,9 +65,9 @@ body {
 
 /* クイズ関連のスタイル */
 
-.quiz-question {
+.quiz-question {  
   font-size: 2rem; /* 大きめ */
-  font-weight: 700;
+  font-weight: 700; 
   line-height: 1.2;
 }
 .quiz-answer {
@@ -78,4 +78,30 @@ body {
 @media (max-width: 640px) {
   .quiz-question { font-size: 1.35rem; }
   .quiz-answer { font-size: 1.15rem; }
+}
+
+/* 薄い白の座布団 */
+.card-pill {
+  display: inline-block;
+  background: rgba(255,255,255,0.75); /*半透明の白*/
+  color: #111;  /*文字は濃い色で可読性確保*/
+  padding: 6px 10px;
+  border-radius: 12px;
+  backdrop-filter: blur(6px);  /*背景をややぼかす（モダンブラウザ）*/
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* 問題CSS */
+.box20{
+    padding: 0.5em 1em;
+    margin: 2em 0;
+    color: #5d627b;
+    background: white;
+    border-top: solid 5px #5d627b;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+    
+}
+.box20 p {
+    margin: 0; 
+    padding: 0;
 }

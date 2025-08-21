@@ -5,6 +5,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { WordCard } from '@/types/card';
+import NightStarCanvas from "../components/StarCanvas";
 
 export default function CardListPage() {
   const [cards, setCards] = useState<WordCard[]>([]);
@@ -53,7 +54,10 @@ export default function CardListPage() {
 
   return (
     <div style={{ maxWidth: 500, margin: 'auto', padding: 20 }}>
+      <NightStarCanvas />
+      <div className='card-pill' style={{ marginBottom: 12 }}>
       <h2>暗記カード一覧</h2>
+      <p>カードを追加・編集・削除できます。</p>
       <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
         <input
           placeholder="質問"
@@ -80,6 +84,7 @@ export default function CardListPage() {
           </li>
         ))}
       </ul>
+    </div>
     </div>
   );
 }

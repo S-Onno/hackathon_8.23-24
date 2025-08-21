@@ -5,7 +5,6 @@ import NightStarCanvas from "../components/StarCanvas";
 
 
 
-
 export default function QuizPage() {
   const [cards, setCards] = useState<WordCard[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
@@ -59,7 +58,7 @@ export default function QuizPage() {
   const current = currentIndex === null ? null : cards[currentIndex];
 
   return (
-     <div className="relative w-full min-h-screen">
+    <div className="relative w-full min-h-screen">
       <NightStarCanvas />
     
     <div style={{ maxWidth: 640, margin: 'auto', padding: 20 }}>
@@ -72,6 +71,7 @@ export default function QuizPage() {
 
       {current ? (
         <>
+        <div className='box20 rounded-3xl'> {/* */}
           <div style={{ padding: 16, border: '1px solid #ddd', borderRadius: 8, marginBottom: 12 }}>
             <div className="quiz-question"><b>Q:</b> {current.question}</div>
             {showAnswer ? <div className="quiz-answer" style={{ marginTop: 8 }}><b>A:</b> {current.answer}</div> : null}
@@ -89,6 +89,7 @@ export default function QuizPage() {
 
           <div style={{ marginTop: 20, color: '#666' }}>
             ショートカットキー | 回答表示: Space = 回答切替, → = 次の問題
+          </div>
           </div>
         </>
       ) : (
