@@ -1,30 +1,34 @@
-import NavigationBar from '../components/NavigationBar';
+'use client';
+import StudySummary from '../components/StudySummary';
 import RadarChart from '../components/RadarChart';
-import FriendCardList from '../components/FriendCard';
+
+import LineChart from '../components/LineChart';
+import NavigationBar from '../components/NavigationBar';
 import StarCanvas from '../components/StarCanvas';
-// import SpaceMapChart from '@/components/SpaceMapChart';
-// import GoalTracker from '@/components/GoalTracker';
+import BackToTopButton from '../components/BackTop';
+
 
 export default function MyPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b text-white px-6 py-10 pt-10 space-y-20">
+    <div className="min-h-screen bg-gradient-to-b from-[#0f0c29] text-white pt-20 p-10 flex flex-col items-center">
       <NavigationBar />
       <StarCanvas />
-      <h1 className="text-4xl font-bold text-center mb-8">My Page</h1>
-
-      {/* 🌌 自分のステータス */}
-      <section className="space-y-4">
-        <h2 className="text-2xl text-center font-semibold text-indigo-300">自分のステータス</h2>
-        <div className="flex justify-center mt-8">
-          <RadarChart />
-        </div>
-      </section>
-
-      {/* 🧑‍🚀 フレンドの進捗 */}
-      <section className="space-y-4">
-        <h2 className="text-2xl text-center font-semibold text-indigo-300">フレンドの進捗</h2>
-        <FriendCardList />
-      </section>
-    </main>
+        <div className="flex flex-col md:flex-row items-center gap-8">
+        <StudySummary
+          username="なさり"
+          today={4}
+          week={34}
+          month={120}
+        />          
+        <RadarChart />
+      </div>
+      
+      <div className="mt-8">
+        <LineChart />
+      </div>
+      <div className="mb-2 w-full flex justify-start">
+        <BackToTopButton />
+      </div>
+    </div>
   );
 }

@@ -10,8 +10,8 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
       lastStudyDate: "2025-08-18",
       message: "単語帳の作成を頑張っています！",
       studyLogs: [
-        { date: "2025-08-18", hours: 3, topic: "英単語" },
-        { date: "2025-08-17", hours: 2, topic: "文法" },
+        { date: "2025-08-18", hours: 3, topic: "SC+" },
+        { date: "2025-08-17", hours: 2, topic: "SQlite" },
       ],
       profile: {
         name: "たるたる",
@@ -25,10 +25,10 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
       week: 14,
       month: 33,
       lastStudyDate: "2025-08-18",
-      message: "単語帳の作成を頑張っています！",
+      message: "成果物の完成を目指しています",
       studyLogs: [
-        { date: "2025-08-18", hours: 3, topic: "英単語" },
-        { date: "2025-08-17", hours: 2, topic: "文法" },
+        { date: "2025-08-18", hours: 3, topic: "Next.js" },
+        { date: "2025-08-17", hours: 2, topic: "Linuc102" },
       ],
       profile: {
         name: "やす",
@@ -42,15 +42,15 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
       week: 15,
       month: 34,
       lastStudyDate: "2025-08-18",
-      message: "単語帳の作成を頑張っています！",
+      message: "認証機能の実装を頑張っています！",
       studyLogs: [
-        { date: "2025-08-18", hours: 3, topic: "英単語" },
-        { date: "2025-08-17", hours: 2, topic: "文法" },
+        { date: "2025-08-18", hours: 3, topic: "Next.js" },
+        { date: "2025-08-17", hours: 2, topic: "Linuc102" },
       ],
       profile: {
         name: "なかそね",
-        goal: "成果物の完成を目指しています",
-        favoriteSubject: "web開発",
+        goal: "認証機能の実装を頑張っています！",
+        favoriteSubject: "Next.js",
       },
     },
     bokutti: {
