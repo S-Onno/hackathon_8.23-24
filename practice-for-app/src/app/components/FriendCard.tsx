@@ -32,36 +32,6 @@ const friends: Friend[] = [
     week: 19,
     month: 75,
   },
-  {
-    name: "test01",
-    today: 1,
-    week: 11,
-    month: 51,
-  },
-  {
-    name: "test02",
-    today: 2,
-    week: 12,
-    month: 52,
-  },
-  {
-    name: "test03",
-    today: 3,
-    week: 13,
-    month: 53,
-  },
-  {
-    name: "test04",
-    today: 4,
-    week: 14,
-    month: 54,
-  },
-  {
-    name: "test05",
-    today: 5,
-    week: 15,
-    month: 55,
-  },
 ];
 
 export default function FriendCardList() {
