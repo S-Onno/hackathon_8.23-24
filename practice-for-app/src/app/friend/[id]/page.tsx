@@ -27,6 +27,7 @@ export default function FriendPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f0c29] text-white pt-20 p-10 flex flex-col items-center">
       <NavigationBar />
+      <StarCanvas />
 
       <StarCanvas />
 
