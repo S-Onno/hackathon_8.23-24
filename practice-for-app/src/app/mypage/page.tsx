@@ -1,6 +1,7 @@
 'use client';
 import StudySummary from '../components/StudySummary';
 import RadarChart from '../components/RadarChart';
+
 import LineChart from '../components/LineChart';
 import NavigationBar from '../components/NavigationBar';
 import StarCanvas from '../components/StarCanvas';

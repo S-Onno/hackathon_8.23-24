@@ -136,6 +136,9 @@ export default function StudyPage() {
       <div className="mb-8 w-full flex justify-start">
         <BackToTopButton />
       </div>
+      <div className="mb-2 w-full flex justify-start">
+        <BackToTopButton />
+      </div>
     </div>
   );
 }
