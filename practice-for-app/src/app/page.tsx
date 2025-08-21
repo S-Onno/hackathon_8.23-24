@@ -2,6 +2,7 @@
 
 import NavButton from "./components/NavButton";
 import NightStarCanvas from "./components/StarCanvas";
+import Image from 'next/image';
 
 export default function HomePage() {
     return (
@@ -11,7 +12,12 @@ export default function HomePage() {
 
             {/* 上層のコンテンツ */}
             <main className="min-h-screen bg-gradient-to-b from-black text-white flex flex-col items-center justify-center px-4">
-                <h1 className="text-5xl font-bold mb-4 tracking-wide">Universe</h1>
+                <h1 className="text-5xl font-bold mb-4 tracking-wide">
+                    <Image src="/_images/BigUniverselogo.png" // 画像のパスを指定
+                            alt="Universe Logo"
+                            width={300}
+                            height={200}>
+                </Image></h1>
                 <p className="text-lg mb-8 text-center max-w-md">
                     あなたの学びが、惑星を育てる。 宇宙をテーマにした学習アプリで、努力を可視化しよう。
                 </p>
