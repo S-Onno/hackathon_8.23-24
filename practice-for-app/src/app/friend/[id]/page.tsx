@@ -6,7 +6,6 @@ import StudyCard from '../../components/StudyCard';
 import NavigationBar from '../../components/NavigationBar';
 import StudyLogsBar from '../../components/StudyLogsBar';
 import StarCanvas from '../../components/StarCanvas';
-import BackTopButton from '../../components/BackTop';
 
 export default function FriendPage() {
   const params = useParams();
@@ -74,9 +73,6 @@ export default function FriendPage() {
         </div>
       )}
 
-      <div className="mb-2 w-full flex justify-start">
-        <BackTopButton />
-      </div>
     </div>
   );
 }

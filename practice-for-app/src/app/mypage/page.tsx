@@ -4,7 +4,7 @@ import RadarChart from '../components/RadarChart';
 import LineChart from '../components/LineChart';
 import NavigationBar from '../components/NavigationBar';
 import StarCanvas from '../components/StarCanvas';
-import BackToTopButton from '../components/BackTop';
+// import BackToTopButton from '../components/BackTop';
 
 
 export default function MyPage() {
@@ -26,9 +26,9 @@ export default function MyPage() {
       <div className="mt-8">
         <LineChart />
       </div>
-      <div className="mb-2 w-full flex justify-start">
+      {/* <div className="mb-2 w-full flex justify-start">
         <BackToTopButton />
-      </div>
+      </div> */}
     </div>
   );
 }
