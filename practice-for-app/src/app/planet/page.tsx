@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import NightStarCanvas from "../components/StarCanvas";
 
 type Creature = {
   id: number;
@@ -75,7 +76,12 @@ export default function PlanetPage() {
   }, []);
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-black">
+    <div className="flex justify-center items-center min-h-screen">
+      {/* 星の背景（いちばん下のレイヤー） */}
+      <NightStarCanvas />
+
+      {/* 黒のグラデーションを画面全体にかける */}
+      <main className="absolute inset-0 bg-gradient-to-b from-black flex flex-col items-center justify-center text-white px-4">
       <div className="relative w-[400px] h-[400px]">
         {/* 惑星 */}
         <Image src="/_images/earthilust.png" alt="planet" fill className="object-contain" />
@@ -96,6 +102,7 @@ export default function PlanetPage() {
           />
         ))}
       </div>
+      </main>
     </div>
   );
 }

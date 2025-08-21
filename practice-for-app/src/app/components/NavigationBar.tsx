@@ -1,4 +1,4 @@
-// src/components/NavigationBar.tsx
+//src/components/NavigationBar.tsx
 'use client';
 
 import Link from 'next/link';
@@ -23,3 +23,4 @@ export default function NavigationBar() {
     </nav>
   );
 }
+
