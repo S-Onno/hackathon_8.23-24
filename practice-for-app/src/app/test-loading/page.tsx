@@ -2,6 +2,7 @@
  * テスト用地球ぐるぐるローディング画面
  */
 "use client";
+
 import Image from "next/image";
 import NightStarCanvas from "../components/StarCanvas";
 
