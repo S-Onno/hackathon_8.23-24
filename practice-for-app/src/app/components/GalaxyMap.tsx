@@ -32,7 +32,7 @@ export default function GalaxyMap({ planets }: GalaxyMapProps) {
               }`}
             />          
               
-            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 text-white text-sm opacity-0 group-hover:opacity-100 transition">
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 text-white text-sm whitespace-nowrap">
               {planet.name}
             </div>
           </div>
