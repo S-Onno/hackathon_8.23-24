@@ -5,6 +5,7 @@ import StarCanvas from '../components/StarCanvas';
 
 export default function FriendPage() {
   return (
+
     
     <main className="min-h-screen bg-gradient-to-b to-black text-white pt-20 px-4 py-8">
       <NavigationBar />

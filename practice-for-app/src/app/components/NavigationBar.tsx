@@ -25,7 +25,6 @@ export default function NavigationBar() {
           />
         </Link>
       </div>
-
       {/* ナビゲーションリンクを中央に配置 */}
       <div className="flex-1 flex justify-center gap-6">
         {navItems.map((item) => (
