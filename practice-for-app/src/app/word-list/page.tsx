@@ -6,6 +6,7 @@
 import { useEffect, useState } from 'react';
 import { WordCard } from '@/types/card';
 import BackToTopButton from '../components/BackTop';
+import NightStarCanvas from "../components/StarCanvas";
 
 export default function CardListPage() {
   const [cards, setCards] = useState<WordCard[]>([]);
@@ -53,7 +54,8 @@ export default function CardListPage() {
   };
 
   return (
-    <div style={{ maxWidth: 500, margin: 'auto', padding: 20 }}>
+  <div style={{ maxWidth: 500, margin: 'auto', padding: 20 }}>
+    <div className='box20'>
       <h2>暗記カード一覧</h2>
       <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
         <input
@@ -68,17 +70,24 @@ export default function CardListPage() {
           onChange={e => setAnswer(e.target.value)}
           required
         />
-        <button type="submit">{editId ? '更新' : '追加'}</button>
+        <div className="a">
+        <button type="submit">{editId ? '更新' : '追加'}</button></div>
         {editId && <button onClick={() => { setEditId(null); setQuestion(''); setAnswer(''); }}>キャンセル</button>}
       </form>
+      </div>
+      <br/>
+      <br/>
       <ul>
         {cards.map(card => (
           <li key={card.id} style={{ marginBottom: 10 }}>
-            <b>Q:</b> {card.question} <br />
-            <b>A:</b> {card.answer} <br />
-            <button onClick={() => handleEdit(card)}>編集</button>
-            <button onClick={() => handleDelete(card.id)}>削除</button>
-          </li>
+            <div className="card-pill"><b>Q:</b> {card.question}</div>
+            <div className="card-pill" style={{ marginTop: 6 }}><b>A:</b> {card.answer}</div>
+            <div className='' style={{ marginTop: 6 }}>
+              <button onClick={() => handleEdit(card)}>編集</button>
+              <button onClick={() => handleDelete(card.id)}>削除</button>
+  </div>
+
+</li>
         ))}
       </ul>
       <div className="mb-2 w-full flex justify-start">
