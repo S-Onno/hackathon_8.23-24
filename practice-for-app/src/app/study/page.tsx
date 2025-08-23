@@ -102,9 +102,8 @@ export default function StudyPage() {
       <StarCanvas />
 
       {/* タイマーUI本体 */}
+      <h2 className="text-3xl font-bold text-center mb-12">学習時間記録</h2>
       <div className="bg-white text-gray-800 rounded-lg shadow-lg p-6 gap-4 w-full max-w-md flex flex-col items-center">
-        <h2 className="text-xl font-bold mb-4">学習時間記録</h2>
-
         {/* モード切り替えボタン（タイマー／ストップウォッチ／ポモドーロ） */}
         <div className="flex gap-4 mb-20">
           {["timer", "stopwatch", "pomodoro"].map((m) => (
@@ -180,11 +179,6 @@ export default function StudyPage() {
           </button>
         </div>
       </div>
-
-      {/* ページトップに戻るボタン
-      <div className="w-full flex justify-start">
-        <BackToTopButton />
-      </div> */}
     </div>
   );
 }
