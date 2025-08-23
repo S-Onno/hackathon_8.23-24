@@ -9,7 +9,7 @@ import Link from 'next/link';
 // 独自に HTTP ステータス番号や digest (Next.js が生成する一意なトレース ID) を持たせるための型拡張
 type ErrorWithStatus = Error & { status?: number; digest?: string };
 
-export default function Error({
+export default function error({
   error,
   reset,
 }: {
