@@ -7,7 +7,7 @@ export default function BackToTopButton() {
   return (
     <button
       onClick={() => router.push('/top')}
-      className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-1 shadow-md transition-all duration-300">
+      className="bg-gray-900 hover:bg-black text-white rounded-full p-1 shadow-md transition-all duration-300">
         <img
         src="../_images/ginga.png"
         alt="地球に戻る"
