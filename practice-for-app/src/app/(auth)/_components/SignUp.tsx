@@ -1,8 +1,18 @@
-import Link from "next/link";
+"use client"
 
-export default function SignUpPage() {
+
+/**
+ * 新規ユーザー登録コンポーネント
+ * 新規ユーザー登録フォームで変更点がある場合、ここに記述してください。
+ */
+
+
+import React from 'react'
+import Link from 'next/link';
+
+const SignUp: React.FC = () => {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-black via-indigo-900 to-purple-900 text-white px-4">
+  <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-black via-indigo-900 to-purple-900 text-white px-4">
       <div className="max-w-md w-full bg-white text-black p-8 rounded shadow">
         <h2 className="text-2xl font-bold mb-6 text-center">新規登録</h2>
         <form className="space-y-4">
@@ -14,13 +24,13 @@ export default function SignUpPage() {
         </form>
         <p className="mt-4 text-sm text-center">
           すでにアカウントをお持ちですか？{" "}
-          <Link href="/login">
-          <button className="px-6 py-2 bg-blue-600 rounded hover:bg-blue-700 transition">
+          <Link href="/login" className="text-indigo-600 hover:underline">
             ログイン
-          </button>
           </Link>
         </p>
       </div>
     </main>
-  );
+  )
 }
+
+export default SignUp;

@@ -1,9 +1,17 @@
 /**
- * ログインページです！
+ * ログインフォームコンポーネント
+ * ログインフォームで変更点がある場合、ここに記述してください。
  */
+"use client"
+
+import React from "react";
 import Link from "next/link";
 
-export default function LoginPage() {
+interface LoginFormProps {
+  // 必要に応じてpropsを追加できます
+}
+
+const LoginForm: React.FC<LoginFormProps> = () => {
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-black via-indigo-900 to-purple-900 text-white px-4">
       <div className="max-w-md w-full bg-white text-black p-8 rounded shadow">
@@ -14,13 +22,13 @@ export default function LoginPage() {
         <button type="submit" className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition">ログイン</button>
       </form>
       <p className="mt-4 text-sm text-center">アカウントをお持ちないですか？{" "}
-        <Link href="/signup" className="items-center">
-          <button className="px-6 py-2 bg-green-600 rounded hover:bg-green-700 transition">
-            新規登録
-          </button>
+        <Link href="/signup" className="text-indigo-600 hover:underline">
+          新規登録
         </Link>
       </p>
       </div>
     </main>
   );
-}
+};
+
+export default LoginForm;

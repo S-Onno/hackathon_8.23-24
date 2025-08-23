@@ -4,8 +4,8 @@ export const learningData = {
     {
       label: '今週の学習時間(h)',
       data: [6, 5, 9, 4, 4],
-      backgroundColor: 'rgba(34, 197, 94, 0.2)',
-      borderColor: 'rgba(34, 197, 94, 1)',
+      backgroundColor: 'rgba(15, 52, 67, 0.2)',
+      borderColor: 'rgba(15, 52, 67, 1)',
       borderWidth: 2,
     },
   ],

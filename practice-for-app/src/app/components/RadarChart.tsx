@@ -22,6 +22,7 @@ ChartJS.register(
 )
 
 const options = {
+  maintainAspectRatio: false,
   scales: {
     r: {
       min: 0,
@@ -38,11 +39,36 @@ const options = {
   },
 }
 
+const backgroundPlugin = {
+  id: 'customBackground',
+  beforeDraw: (chart: any) => {
+    const ctx = chart.ctx;
+    const { width, height } = chart;
+    ctx.save();
+
+    // グラデーション背景
+    const gradient = ctx.createLinearGradient(0, 0, 0, height);
+    gradient.addColorStop(0, '#ffffff'); // 深い紫
+    gradient.addColorStop(0.5, '#ffffff'); // 青紫
+    gradient.addColorStop(1, '#ffffff'); // 黒に近い紫
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, width, height);
+    ctx.restore();
+  },
+};
+
 export default function RadarChart() {
   return (
-    <div className="max-w-md mx-auto p-4">
-      <h2 className="text-xl font-bold mb-4 text-center">学習バランス</h2>
-      <Radar data={learningData} options={options} />
+    <div className="max-w-md w-full p-4 bg-white rounded-lg backdrop-blur-md">
+      <h2 className="text-xl font-bold mb-4 text-center text-black">今日の学習バランス</h2>
+      <div className="relative h-64 w-full">
+      <Radar
+        data={learningData}
+        options={options}
+        plugins={[backgroundPlugin]}
+      />
+      </div>
     </div>
-  )
+  );
 }
