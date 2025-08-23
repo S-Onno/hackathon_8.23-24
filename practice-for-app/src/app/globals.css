@@ -141,9 +141,3 @@ body {
 .a:hover:after {
   right: 1.4rem;                   /* 矢印が少し左へスライド（→動きの演出） */
 }
-
-body{
-  vertical-align: middle;          /* インライン要素向け。bodyでは効果ほぼ無し */
-  padding: 50px 0;                 /* 上下に余白 */
-  text-align: left;              /* インライン要素の中央寄せ（a自身はflexで中央） */
-}
