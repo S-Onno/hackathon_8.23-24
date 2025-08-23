@@ -1,42 +1,70 @@
-// components/GalaxyMap.tsx
-import Link from "next/link";
-type Planet = {
+// src/components/GalaxyMap.tsx
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import '@/app/globals.css'; 
+
+// propsの型定義
+interface Planet {
   id: string;
   name: string;
-  x: number;
-  y: number;
   route: string;
-  avatar: string; 
-};
+  avatar: string;
+  isSun?: boolean;
+  orbitRadius: number; // 軌道の半径を追加
+  animationDuration: number; // アニメーションの時間を追加
+}
 
-
-type GalaxyMapProps = {
+interface GalaxyMapProps {
   planets: Planet[];
-};
+}
 
 export default function GalaxyMap({ planets }: GalaxyMapProps) {
-  return (
-    <div className="relative w-full h-screen bg-gradient-to-b from-black overflow-hidden">
-      {planets.map((planet) => (
-        <Link key={planet.id} href={planet.route}>
-          <div
-            className="absolute group cursor-pointer transition-transform hover:scale-110"
-            style={{ left: planet.x, top: planet.y }}
-          >
+  const sun = planets.find(p => p.isSun);
+  const otherPlanets = planets.filter(p => !p.isSun);
 
-            <img
-              src={planet.avatar}
-              alt={planet.name}
-              className={`rounded-full border-4 ${
-                planet.id === 'mypage' ? 'w-24 h-24 border-yellow-400' : 'w-16 h-16 border-indigo-500'
-              }`}
-            />          
-              
-            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 text-white text-sm opacity-0 group-hover:opacity-100 transition">
-              {planet.name}
-            </div>
-          </div>
+  if (!sun) return null;
+
+  return (
+    <div className="galaxy-map-container">
+      {/* 太陽を中央に配置 */}
+      <div className="sun-wrapper">
+        <Link href={sun.route}>
+          <Image
+            src={sun.avatar}
+            alt={sun.name}
+            width={150}
+            height={150}
+            className="rounded-full shadow-lg border-4 border-yellow-400"
+          />
         </Link>
+      </div>
+
+      {/* 惑星の公転軌道コンテナ */}
+      {otherPlanets.map((planet, index) => (
+        <div
+          key={planet.id}
+          className="planet-orbit-container"
+          style={{
+            animationDuration: `${planet.animationDuration}s`,
+            width: `${planet.orbitRadius * 2}px`, // 軌道コンテナの幅と高さを設定
+            height: `${planet.orbitRadius * 2}px`,
+          }}
+        >
+          <div className="planet-position-container">
+            <Link href={planet.route} className="planet-link">
+              <Image
+                src={planet.avatar}
+                alt={planet.name}
+                width={80}
+                height={80}
+                className="rounded-full shadow-lg border-2 border-blue-400 hover:scale-110 transition-transform"
+              />
+            </Link>
+          </div>
+        </div>
       ))}
     </div>
   );

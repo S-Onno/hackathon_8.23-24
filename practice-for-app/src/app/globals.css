@@ -79,3 +79,47 @@ body {
   .quiz-question { font-size: 1.35rem; }
   .quiz-answer { font-size: 1.15rem; }
 }
+
+/* src/components/GalaxyMap.css */
+.galaxy-map-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 太陽を中央に固定 */
+.sun-wrapper {
+  z-index: 10;
+}
+
+/* 惑星の公転軌道コンテナ */
+.planet-orbit-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation-name: orbit;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* 惑星自体の配置と回転 */
+.planet-position-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%); /* 惑星をコンテナの中心に配置 */
+}
+
+/* 公転アニメーションの定義 */
+@keyframes orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

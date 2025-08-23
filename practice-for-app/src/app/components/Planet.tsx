@@ -1,7 +1,24 @@
+// pages/home/page.tsx
+import GalaxyMap from '../components/GalaxyMap';
+import StarCanvas from '../components/StarCanvas';
+
 const planets = [
-  { id: 'mypage', name: 'mypage', x: 500, y: 500, route: '/mypage', avatar: '/avatars/me.png' },
-  { id: 'yasu', name: 'やす', x: 300, y: 150, route: '/friend/yuki', avatar: '/avatars/yuki.png' },
-  { id: 'nakasone', name: 'なかそね', x: 500, y: 250, route: '/friend/taro', avatar: '/avatars/taro.png' },
-  { id: 'tarutaru', name: 'たるたる', x: 400, y: 450, route: '/friend/taro', avatar: '/avatars/taro.png' },
-  { id: 'bokutti', name: 'ぼくっち', x: 650, y: 110, route: '/friend/taro', avatar: '/avatars/taro.png' },
+  { id: 'mypage', name: '太陽', route: '/mypage', avatar: '/_images/sun.png', isSun: true, orbitRadius: 0, animationDuration: 0 },
+  { id: '学習', name: '学習', route: '/study', avatar: '/_images/kasei.png', isSun: false, orbitRadius: 150, animationDuration: 20 },
+  { id: 'フレンド', name: 'フレンド', route: '/friends', avatar: '/_images/saturn.png', isSun: false, orbitRadius: 300, animationDuration: 40 },
+  { id: '単語帳', name: '単語帳', route: '/word-list', avatar: '/_images/moon.png', isSun: false, orbitRadius: 100, animationDuration: 15 },
+  
+  { id: 'yasu', name: 'やす', route: '/friend/yasu', avatar: '/_images/earth.png', isSun: false, orbitRadius: 200, animationDuration: 25 },
+  { id: 'nakasone', name: 'なかそね', route: '/friend/nakasone', avatar: '/_images/earth.png', isSun: false, orbitRadius: 250, animationDuration: 35 },
+  { id: 'tarutaru', name: 'たるたる', route: '/friend/tarutaru', avatar: '/_images/earth.png', isSun: false, orbitRadius: 350, animationDuration: 50 },
+  { id: 'bokutti', name: 'ぼくっち', route: '/friend/bokutti', avatar: '/_images/earth.png', isSun: false, orbitRadius: 400, animationDuration: 60 },
 ];
+
+export default function HomePage() {
+  return (
+    <main className="min-h-screen">
+      <StarCanvas />
+      <GalaxyMap planets={planets} />
+    </main>
+  );
+}
