@@ -20,10 +20,6 @@ const planets = [
 export default function HomePage() {
   return (
 
-if (typeof window !== "undefined") {
-  throw new Error("テスト用エラー status:418");
-}
-
     <main className="min-h-screen">
       {/* <NavigationBar /> */}
       <StarCanvas />

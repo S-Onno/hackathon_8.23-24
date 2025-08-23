@@ -82,33 +82,32 @@ export default function Error({
             )}
             <div style={{ marginTop: 10, marginBottom: 0 }}>
               <span style={{ fontSize: 13, color: '#a5b4fc' }}>
-                お問い合わせは{' '}
-                <Link href="https://github.com/S-Onno/hackathon_8.23-24/issues" style={{ color: '#60a5fa', textDecoration: 'underline', fontWeight: 600 }}>
-                  Issues
-                </Link>
-                へ
+                  フィードバックはissuesへ
               </span>
             </div>
           </div>
           <div style={{ display: 'flex', gap: 14, width: '100%', marginTop: 18 }}>
-            <button
-              onClick={() => reset()}
+            <a
+              href="https://github.com/S-Onno/hackathon_8.23-24/issues"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 flex: 1,
+                textAlign: 'center',
                 background: 'linear-gradient(90deg, #2563eb 0%, #60a5fa 100%)',
-                border: 'none',
                 padding: '12px 0',
                 borderRadius: 8,
                 color: '#fff',
                 fontWeight: 700,
                 fontSize: 16,
-                cursor: 'pointer',
+                textDecoration: 'none',
                 boxShadow: '0 2px 8px 0 rgba(37,99,235,0.15)',
                 transition: 'background 0.2s',
+                cursor: 'pointer',
               }}
             >
-              再試行
-            </button>
+              issues
+            </a>
             <a
               href="/"
               style={{
