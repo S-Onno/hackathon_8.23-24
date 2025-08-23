@@ -4,11 +4,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 // 独自に HTTP ステータス番号や digest (Next.js が生成する一意なトレース ID) を持たせるための型拡張
 type ErrorWithStatus = Error & { status?: number; digest?: string };
 
-export default function GlobalError({
+export default function Error({
   error,
   reset,
 }: {
@@ -35,59 +36,75 @@ export default function GlobalError({
   return (
     <html>
       <body style={{
-        // 画面全体を中央寄せしつつダークなグラデーション背景
         minHeight: '100vh',
+        margin: 0,
+        padding: 0,
+        background: 'linear-gradient(135deg, #232526 0%, #1e1b4b 100%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(to bottom,#000,#1e1b4b)',
+        fontFamily: 'system-ui, sans-serif',
         color: '#fff',
-        fontFamily: 'system-ui, sans-serif'
       }}>
         <div style={{
-          // ガラスモーフィズム風の半透明カード
           width: '100%',
           maxWidth: 420,
-          background: 'rgba(255,255,255,0.06)',
-          border: '1px solid rgba(255,255,255,0.15)',
-          borderRadius: 16,
-          padding: '28px 32px',
-          backdropFilter: 'blur(6px)'
+          background: 'rgba(30, 27, 75, 0.95)',
+          borderRadius: 20,
+          boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+          padding: '40px 28px',
+          border: '1.5px solid rgba(255,255,255,0.12)',
+          backdropFilter: 'blur(8px)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}>
-          <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0, marginBottom: 16 }}>
+          {/* 大きなエラーアイコン */}
+          <div style={{ fontSize: 60, marginBottom: 12, color: '#f87171', lineHeight: 1 }}>
+            <span role="img" aria-label="error">❌</span>
+          </div>
+          <h1 style={{ fontSize: 26, fontWeight: 800, margin: 0, marginBottom: 10, letterSpacing: 1 }}>
             エラーが発生しました
           </h1>
-          <div style={{ fontSize: 14, lineHeight: 1.5 }}>
-            <p style={{ margin: 0, marginBottom: 8 }}>
+          <div style={{ fontSize: 15, lineHeight: 1.7, width: '100%', textAlign: 'center', marginBottom: 18 }}>
+            <div style={{ marginBottom: 8 }}>
               <strong>HTTPステータス:</strong>{' '}
-              {/* 抽出したステータス番号を強調表示 */}
-              <span style={{ fontSize: 20, fontWeight: 600, color: '#fca5a5' }}>{status}</span>
-            </p>
-            <p style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0 }}>
+              <span style={{ fontSize: 22, fontWeight: 700, color: '#fca5a5' }}>{status}</span>
+            </div>
+            <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', marginBottom: 8 }}>
               <strong>メッセージ:</strong><br />
-              {/* エラーメッセージが無い場合はフォールバック */}
               {error.message || '不明なエラー'}
-            </p>
+            </div>
             {error.digest && (
-              <p style={{ marginTop: 12, fontSize: 12, opacity: 0.7 }}>
-                {/* Next.js が内部で生成する digest (追跡用 ID) */}
+              <div style={{ fontSize: 12, opacity: 0.7, marginBottom: 8 }}>
                 Trace ID: {error.digest}
-              </p>
+              </div>
             )}
+            <div style={{ marginTop: 10, marginBottom: 0 }}>
+              <span style={{ fontSize: 13, color: '#a5b4fc' }}>
+                お問い合わせは{' '}
+                <Link href="https://github.com/S-Onno/hackathon_8.23-24/issues" style={{ color: '#60a5fa', textDecoration: 'underline', fontWeight: 600 }}>
+                  Issues
+                </Link>
+                へ
+              </span>
+            </div>
           </div>
-          <div style={{ display: 'flex', gap: 12, marginTop: 28 }}>
+          <div style={{ display: 'flex', gap: 14, width: '100%', marginTop: 18 }}>
             <button
               onClick={() => reset()}
               style={{
-                // reset() で対象ツリーを再レンダリングし再試行
                 flex: 1,
-                background: '#2563eb',
+                background: 'linear-gradient(90deg, #2563eb 0%, #60a5fa 100%)',
                 border: 'none',
-                padding: '10px 14px',
+                padding: '12px 0',
                 borderRadius: 8,
                 color: '#fff',
-                fontWeight: 600,
-                cursor: 'pointer'
+                fontWeight: 700,
+                fontSize: 16,
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px 0 rgba(37,99,235,0.15)',
+                transition: 'background 0.2s',
               }}
             >
               再試行
@@ -97,12 +114,15 @@ export default function GlobalError({
               style={{
                 flex: 1,
                 textAlign: 'center',
-                background: '#475569',
-                padding: '10px 14px',
+                background: 'linear-gradient(90deg, #475569 0%, #64748b 100%)',
+                padding: '12px 0',
                 borderRadius: 8,
                 color: '#fff',
-                fontWeight: 600,
-                textDecoration: 'none'
+                fontWeight: 700,
+                fontSize: 16,
+                textDecoration: 'none',
+                boxShadow: '0 2px 8px 0 rgba(71,85,105,0.12)',
+                transition: 'background 0.2s',
               }}
             >
               ホームへ
