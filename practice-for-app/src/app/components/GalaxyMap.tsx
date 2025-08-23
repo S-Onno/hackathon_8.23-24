@@ -1,10 +1,15 @@
 // src/components/GalaxyMap.tsx
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import '@/app/globals.css'; 
+import '@/app/globals.css';
+
+// 惑星の位置情報を格納する型を定義
+interface PlanetPositions {
+  [key: string]: number;
+}
 
 // propsの型定義
 interface Planet {
@@ -12,9 +17,9 @@ interface Planet {
   name: string;
   route: string;
   avatar: string;
+  orbitRadius: number;
+  animationDuration: number;
   isSun?: boolean;
-  orbitRadius: number; // 軌道の半径を追加
-  animationDuration: number; // アニメーションの時間を追加
 }
 
 interface GalaxyMapProps {
@@ -22,8 +27,49 @@ interface GalaxyMapProps {
 }
 
 export default function GalaxyMap({ planets }: GalaxyMapProps) {
+  // useStateの型を明示的に指定
+  const [positions, setPositions] = useState<PlanetPositions>({});
   const sun = planets.find(p => p.isSun);
   const otherPlanets = planets.filter(p => !p.isSun);
+  // useRefの型と初期値を修正
+  const animationFrameId = useRef<number | null>(null);
+
+  useEffect(() => {
+    let lastTime = performance.now();
+    const animate = (currentTime: number) => {
+      const deltaTime = (currentTime - lastTime) / 1000;
+      lastTime = currentTime;
+
+      setPositions(prevPositions => {
+        // newPositionsに型を明示的に指定
+        const newPositions: PlanetPositions = { ...prevPositions };
+        otherPlanets.forEach(planet => {
+          const { id, orbitRadius, animationDuration } = planet;
+          const currentAngle = newPositions[id] || 0;
+          const rotationSpeed = (360 / animationDuration) * (Math.PI / 180);
+          const newAngle = currentAngle + rotationSpeed * deltaTime;
+
+          // `orbitRadius`が `number`型なので、`|| 0`は不要
+          const x = orbitRadius * Math.cos(newAngle);
+          const y = orbitRadius * Math.sin(newAngle);
+
+          newPositions[id] = newAngle;
+          newPositions[`${id}-x`] = x;
+          newPositions[`${id}-y`] = y;
+        });
+        return newPositions;
+      });
+
+      animationFrameId.current = requestAnimationFrame(animate);
+    };
+
+    animationFrameId.current = requestAnimationFrame(animate);
+    return () => {
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
+    };
+  }, [otherPlanets]);
 
   if (!sun) return null;
 
@@ -42,18 +88,19 @@ export default function GalaxyMap({ planets }: GalaxyMapProps) {
         </Link>
       </div>
 
-      {/* 惑星の公転軌道コンテナ */}
-      {otherPlanets.map((planet, index) => (
-        <div
-          key={planet.id}
-          className="planet-orbit-container"
-          style={{
-            animationDuration: `${planet.animationDuration}s`,
-            width: `${planet.orbitRadius * 2}px`, // 軌道コンテナの幅と高さを設定
-            height: `${planet.orbitRadius * 2}px`,
-          }}
-        >
-          <div className="planet-position-container">
+      {/* 惑星の公転 */}
+      {otherPlanets.map((planet) => {
+        const x = positions[`${planet.id}-x`] || 0;
+        const y = positions[`${planet.id}-y`] || 0;
+
+        return (
+          <div
+            key={planet.id}
+            className="planet-wrapper"
+            style={{
+              transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+            }}
+          >
             <Link href={planet.route} className="planet-link">
               <Image
                 src={planet.avatar}
@@ -64,8 +111,8 @@ export default function GalaxyMap({ planets }: GalaxyMapProps) {
               />
             </Link>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
