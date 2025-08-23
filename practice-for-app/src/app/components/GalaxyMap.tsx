@@ -63,6 +63,7 @@ export default function GalaxyMap({ planets }: GalaxyMapProps) {
                 className="rounded-full shadow-lg border-2 border-blue-400 hover:scale-110 transition-transform"
               />
             </Link>
+
           </div>
         </div>
       ))}
