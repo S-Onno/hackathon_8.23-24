@@ -1,7 +1,8 @@
 // pages/home/page.tsx
 import GalaxyMap from '../components/GalaxyMap';
 import StarCanvas from '../components/StarCanvas';
-// import NavigationBar from '../components/NavigationBar';
+import NavigationBar from '../components/NavigationBar';
+
 
 
 const planets = [
@@ -18,6 +19,7 @@ const planets = [
 
 export default function HomePage() {
   return (
+
     <main className="min-h-screen">
       {/* <NavigationBar /> */}
       <StarCanvas />

@@ -28,6 +28,8 @@ export default function FriendPage() {
       <NavigationBar />
       <StarCanvas />
 
+      <StarCanvas />
+
       <h1 className="text-2xl font-semibold mb-2">{friendData.name} さんの惑星</h1>
 
       {friendData.message && (
