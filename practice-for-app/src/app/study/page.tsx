@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import NavigationBar from "../components/NavigationBar";
 import StarCanvas from "../components/StarCanvas"; 
-import BackToTopButton from "../components/BackTop"; 
+//import BackToTopButton from "../components/BackTop"; 
 
 export default function StudyPage() {
   // タイマーのモードを管理（3種類：タイマー、ストップウォッチ、ポモドーロ）
@@ -16,7 +16,7 @@ export default function StudyPage() {
   const [isRunning, setIsRunning] = useState(false);
 
   // タイマー用の分・秒入力（ユーザーが設定）
-  const [inputMinutes, setInputMinutes] = useState(30);
+  const [inputMinutes, setInputMinutes] = useState(0);
   const [inputSeconds, setInputSeconds] = useState(0);
 
   // ポモドーロ用：作業中か休憩中かを管理
@@ -27,18 +27,29 @@ export default function StudyPage() {
   const BREAK_DURATION = 5 * 60;
 
   // タイマーの動作処理（1秒ごとに時間を更新）
+  // モード変更時に時間を初期化
+  useEffect(() => {
+    setIsRunning(false); // モード切り替え時は一旦停止
+
+    if (mode === "timer") {
+      setTime(inputMinutes * 60 + inputSeconds); // 入力値に基づいて初期化
+    } else if (mode === "pomodoro") {
+      setIsBreak(false); // 作業モードに戻す
+      setTime(WORK_DURATION); // 作業時間で初期化
+    } else {
+      setTime(0); // ストップウォッチは0からスタート
+    }
+  }, [mode, inputMinutes, inputSeconds]);
+
+  // タイマーの動作処理（1秒ごとに時間を更新）
   useEffect(() => {
     let interval: NodeJS.Timeout;
+
     if (isRunning) {
       interval = setInterval(() => {
         setTime((prev) => {
-          // ストップウォッチ：時間を加算
           if (mode === "stopwatch") return prev + 1;
-
-          // タイマー：時間を減算（0以下にならない）
           if (mode === "timer") return Math.max(prev - 1, 0);
-
-          // ポモドーロ：時間を減算し、0になったら作業⇔休憩を切り替え
           if (mode === "pomodoro") {
             if (prev <= 1) {
               const nextIsBreak = !isBreak;
@@ -47,13 +58,11 @@ export default function StudyPage() {
             }
             return prev - 1;
           }
-
           return prev;
         });
-      }, 1000); // 1秒ごとに更新
+      }, 1000);
     }
 
-    // コンポーネントのアンマウント時にインターバルをクリア
     return () => clearInterval(interval);
   }, [isRunning, mode, isBreak]);
 
@@ -77,7 +86,7 @@ export default function StudyPage() {
   const handleReset = () => {
     setIsRunning(false);
     if (mode === "timer") {
-      setTime(inputMinutes * 60 + inputSeconds);
+      setTime(0); // タイマーは0にリセット
     } else if (mode === "pomodoro") {
       setIsBreak(false);
       setTime(WORK_DURATION);
@@ -93,9 +102,8 @@ export default function StudyPage() {
       <StarCanvas />
 
       {/* タイマーUI本体 */}
+      <h2 className="text-3xl font-bold text-center mb-12">学習時間記録</h2>
       <div className="bg-white text-gray-800 rounded-lg shadow-lg p-6 gap-4 w-full max-w-md flex flex-col items-center">
-        <h2 className="text-xl font-bold mb-4">学習時間記録</h2>
-
         {/* モード切り替えボタン（タイマー／ストップウォッチ／ポモドーロ） */}
         <div className="flex gap-4 mb-20">
           {["timer", "stopwatch", "pomodoro"].map((m) => (
@@ -144,8 +152,12 @@ export default function StudyPage() {
 
         {/* 時間表示（mm:ss形式） */}
         <div className="text-5xl font-mono mb-40">
-          {Math.floor(time / 60).toString().padStart(2, "0")}:
+          {/* {Math.floor(time / 60).toString().padStart(2, "0")}:
           {(time % 60).toString().padStart(2, "0")}
+           */}
+          {(mode === "timer" || mode === "stopwatch")
+            ? `${Math.floor(time / 3600).toString().padStart(2, "0")}:${Math.floor((time % 3600) / 60).toString().padStart(2, "0")}:${(time % 60).toString().padStart(2, "0")}`
+            : `${Math.floor(time / 60).toString().padStart(2, "0")}:${(time % 60).toString().padStart(2, "0")}`}
         </div>
 
         {/* 操作ボタン群（スタート／ストップ／リセット） */}
@@ -160,11 +172,12 @@ export default function StudyPage() {
             リセット
           </button>
         </div>
-      </div>
-
-      {/* ページトップに戻るボタン */}
-      <div className="w-full flex justify-start">
-        <BackToTopButton />
+        {/* 学習時間の記録保存ボタン もしデータベースが完成してできたら追加していく */}
+        <div>
+          <button className="px-4 py-2 bg-green-400 text-white rounded">
+            記録を保存
+          </button>
+        </div>
       </div>
     </div>
   );

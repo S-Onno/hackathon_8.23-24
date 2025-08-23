@@ -2,6 +2,23 @@ import { NextRequest } from 'next/server';
 
 export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
   const mockData = {
+    nathalie: {
+      name: "なさり",
+      today: 2,
+      week: 10,
+      month: 24,
+      lastStudyDate: "2025-08-18",
+      message: "Universeの改良を頑張っています！",
+      studyLogs: [
+        { date: "2025-08-18", hours: 3, topic: "SC+" },
+        { date: "2025-08-17", hours: 2, topic: "SQlite" },
+      ],
+      profile: {
+        name: "なさり",
+        goal: "Universeの改良を頑張っています！",
+        favoriteSubject: "web開発",
+      },
+    },
     tarutaru: {
       name: "たるたる",
       today: 3,

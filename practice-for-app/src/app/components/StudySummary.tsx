@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 type Props = {
   today: number;
   week: number;
