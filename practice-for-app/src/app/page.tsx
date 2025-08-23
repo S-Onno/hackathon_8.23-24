@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 
 export default function HomePage() {
-     throw new Error("エラーが発生しました status:418"); // テスト用エラー
+    // throw new Error("エラーが発生しました status:418"); // テスト用エラー
     return (
         <div className="relative w-full min-h-screen">
             {/* 下層の背景コンポーネント */}
