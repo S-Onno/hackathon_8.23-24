@@ -5,8 +5,10 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { WordCard } from '@/types/card';
+
 import BackToTopButton from '../components/BackTop';
 import NightStarCanvas from "../components/StarCanvas";
+
 
 export default function CardListPage() {
   const [cards, setCards] = useState<WordCard[]>([]);
@@ -90,9 +92,6 @@ export default function CardListPage() {
 </li>
         ))}
       </ul>
-      <div className="mb-2 w-full flex justify-start">
-        <BackToTopButton />
-      </div>
     </div>
   );
 }

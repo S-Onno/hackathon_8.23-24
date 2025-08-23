@@ -4,6 +4,7 @@ import StarCanvas from '../components/StarCanvas';
 import NavigationBar from '../components/NavigationBar';
 
 
+
 const planets = [
   { id: 'mypage', name: 'mypage', x: 800, y: 300, route: '/mypage', avatar: '/_images/sun.png' },
   { id: '学習', name: '学習', x: 1000, y: 350, route: '/study', avatar: '/_images/kasei.png' },
@@ -18,6 +19,7 @@ const planets = [
 
 export default function HomePage() {
   return (
+
     <main className="min-h-screen">
       {/* <NavigationBar /> */}
       <StarCanvas />
