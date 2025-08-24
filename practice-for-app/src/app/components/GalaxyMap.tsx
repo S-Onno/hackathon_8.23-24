@@ -1,14 +1,9 @@
-// src/components/GalaxyMap.tsx
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import '@/app/globals.css';
-
-interface PlanetPositions {
-  [key: string]: number;
-}
 
 interface Planet {
   id: string;
@@ -18,6 +13,10 @@ interface Planet {
   orbitRadius: number;
   animationDuration: number;
   isSun?: boolean;
+}
+
+interface PlanetPositions {
+  [key: string]: number;
 }
 
 interface GalaxyMapProps {
@@ -33,30 +32,29 @@ const SOFT_BLUE_NEON_COLORS = [
 ];
 
 export default function GalaxyMap({ planets }: GalaxyMapProps) {
+  const [positions, setPositions] = useState<PlanetPositions>({});
+  const [mounted, setMounted] = useState(false); // クライアントマウント確認
   const sun = planets.find(p => p.isSun);
   const planetsToAnimate = planets.filter(p => !p.isSun);
-
+  const animationFrameId = useRef<number | null>(null);
   const initialAnglesRef = useRef<Record<string, number>>({});
   const colorMapRef = useRef<Record<string, string>>({});
-  const animationFrameId = useRef<number | null>(null);
 
-  // 初期位置を設定
-  const initialPositions: PlanetPositions = {};
-  planetsToAnimate.forEach((planet, i) => {
-    const step = (2 * Math.PI) / planetsToAnimate.length;
-    const angle = step * i;
-    initialAnglesRef.current[planet.id] = angle;
-    colorMapRef.current[planet.id] = SOFT_BLUE_NEON_COLORS[i % SOFT_BLUE_NEON_COLORS.length];
-    initialPositions[planet.id] = angle;
-    initialPositions[`${planet.id}-x`] = planet.orbitRadius * Math.cos(angle);
-    initialPositions[`${planet.id}-y`] = planet.orbitRadius * Math.sin(angle);
-  });
-
-  const [positions, setPositions] = useState<PlanetPositions>(initialPositions);
-  const [shootingStar, setShootingStar] = useState({ x: 0, y: 0, visible: false });
-
-  // 惑星のアニメーション
   useEffect(() => {
+    setMounted(true); // クライアント側マウント完了
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return; // SSR時は何もしない
+
+    if (planetsToAnimate.length > 0) {
+      const step = (2 * Math.PI) / planetsToAnimate.length;
+      planetsToAnimate.forEach((planet, i) => {
+        initialAnglesRef.current[planet.id] = step * i;
+        colorMapRef.current[planet.id] = SOFT_BLUE_NEON_COLORS[i % SOFT_BLUE_NEON_COLORS.length];
+      });
+    }
+
     let lastTime = performance.now();
 
     const animate = (currentTime: number) => {
@@ -82,41 +80,17 @@ export default function GalaxyMap({ planets }: GalaxyMapProps) {
     };
 
     animationFrameId.current = requestAnimationFrame(animate);
+
     return () => {
       if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
     };
-  }, [planetsToAnimate]);
-
-  // 流れ星アニメーション
-  useEffect(() => {
-    let starAnimationId: number;
-    const animateStar = () => {
-      setShootingStar({ x: 0, y: 0, visible: true });
-      let start = performance.now();
-
-      const step = (time: number) => {
-        const t = (time - start) / 1000; // 秒
-        if (t > 1.5) {
-          setShootingStar({ x: 0, y: 0, visible: false });
-          starAnimationId = window.setTimeout(animateStar, 2000 + Math.random() * 3000);
-          return;
-        }
-        setShootingStar({ x: t * window.innerWidth, y: t * window.innerHeight, visible: true });
-        requestAnimationFrame(step);
-      };
-
-      requestAnimationFrame(step);
-    };
-
-    starAnimationId = window.setTimeout(animateStar, 1000);
-    return () => clearTimeout(starAnimationId);
-  }, []);
+  }, [mounted, planetsToAnimate]);
 
   if (!sun) return null;
+  if (!mounted) return null; // SSR時は描画しない
 
   return (
     <div className="galaxy-map-container relative w-full h-screen flex items-center justify-center bg-night-sky overflow-hidden">
-      {/* 軌道 */}
       {planetsToAnimate.map(planet => (
         <div
           key={`${planet.id}-orbit`}
@@ -132,7 +106,6 @@ export default function GalaxyMap({ planets }: GalaxyMapProps) {
         />
       ))}
 
-      {/* 太陽 */}
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <Link href={sun.route}>
           <Image
@@ -148,14 +121,12 @@ export default function GalaxyMap({ planets }: GalaxyMapProps) {
         </div>
       </div>
 
-      {/* 惑星 */}
       {planetsToAnimate.map(planet => {
         const x = positions[`${planet.id}-x`] || 0;
         const y = positions[`${planet.id}-y`] || 0;
         const color = colorMapRef.current[planet.id];
         const size = 60;
-        const time = performance.now();
-        const glowOffset = 2 + Math.sin(time / 300 + planet.id.length) * 2;
+        const glowOffset = 2 + Math.sin(performance.now() / 300 + planet.id.length) * 2;
 
         return (
           <div
@@ -188,18 +159,6 @@ export default function GalaxyMap({ planets }: GalaxyMapProps) {
           </div>
         );
       })}
-
-      {/* 流れ星 */}
-      {shootingStar.visible && (
-        <div
-          className="absolute w-2 h-2 bg-white rounded-full"
-          style={{
-            top: shootingStar.y,
-            left: shootingStar.x,
-            boxShadow: '0 0 10px 3px white, 0 0 20px 6px white',
-          }}
-        />
-      )}
     </div>
   );
 }
