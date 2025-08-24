@@ -60,11 +60,10 @@ export default function QuizPage() {
 
   return (
      <div className="relative w-full min-h-screen">
-      <NightStarCanvas />
+      <NightStarCanvas /> 
     
     <div style={{ maxWidth: 640, margin: 'auto', padding: 20 }}>
       <h2>単語クイズ</h2>
-
       <div style={{ marginBottom: 16 }}>
         <strong>出題数:</strong> {cards.length}
         {' '}<strong>（現在）:</strong> {current ? `${currentIndex! + 1}/${cards.length}` : '-'}
