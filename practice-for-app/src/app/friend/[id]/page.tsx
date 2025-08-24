@@ -30,7 +30,7 @@ export default function FriendPage() {
 
       <StarCanvas />
 
-      <h1 className="text-2xl font-semibold mb-2">{friendData.name} さんの惑星</h1>
+      <h1 className="text-3xl font-bold mt-8 mb-4 text-white tracking-wide">{friendData.name} さんの惑星</h1>
 
       {friendData.message && (
         <div className="mt-2 px-4 py-2 bg-indigo-700 rounded-lg text-white text-sm shadow-md max-w-md text-center">
