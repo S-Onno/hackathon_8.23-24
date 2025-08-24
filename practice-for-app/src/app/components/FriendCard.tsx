@@ -11,10 +11,10 @@ type Friend = {
 };
 
 const friends: Friend[] = [
-  { id: 'yasu', name: "やす", today: 3, week: 21, month: 31 },
-  { id: 'nakasone', name: "なかそね", today: 4, week: 18, month: 32 },
-  { id: 'tarutaru', name: "たるたる", today: 3, week: 16, month: 33 },
-  { id: 'bokutti', name: "ぼくっち", today: 5, week: 19, month: 34 },
+  { id: 'yasu', name: "やす", today: 4, week: 12, month: 27 },
+  { id: 'nakasone', name: "なかそね", today: 6, week: 15, month: 34 },
+  { id: 'tarutaru', name: "たるたる", today: 3, week: 8, month: 22 },
+  { id: 'bokutti', name: "ぼくっち", today: 0, week: 0, month: 0 },
 ];
 
 export default function FriendCardList() {

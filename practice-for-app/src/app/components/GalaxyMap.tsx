@@ -143,7 +143,9 @@ export default function GalaxyMap({ planets }: GalaxyMapProps) {
             className="rounded-full shadow-[0_0_30px_10px_rgba(255,200,50,0.7)] border-4 border-yellow-400"
           />
         </Link>
-        <div className="text-white text-base mt-2 text-center whitespace-nowrap">{sun.name}</div>
+        <div className="text-white text-base mt-2 text-center whitespace-nowrap">
+          {sun.name}
+        </div>
       </div>
 
       {/* 惑星 */}
@@ -165,8 +167,8 @@ export default function GalaxyMap({ planets }: GalaxyMapProps) {
               transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
             }}
           >
-            <Link href={planet.route}>
-              <Image
+            <Link href={planet.route} className="planet-link">
+              <Image 
                 src={planet.avatar}
                 alt={planet.name}
                 width={size}
@@ -180,7 +182,9 @@ export default function GalaxyMap({ planets }: GalaxyMapProps) {
                 }}
               />
             </Link>
-            <div className="text-white text-sm mt-1 text-center whitespace-nowrap">{planet.name}</div>
+            <div className="text-white text-sm mt-1 text-center whitespace-nowrap">
+              {planet.name}
+            </div>
           </div>
         );
       })}
