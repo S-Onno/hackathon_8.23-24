@@ -80,64 +80,26 @@ body {
   .quiz-answer { font-size: 1.15rem; }
 }
 
-.box20 {
-  background: rgba(94, 255, 217, 0.379); /* 薄い白 */
-  padding: 18px;
-  border-radius: 24px; /* rounded-3xl と併用してもOK */
-  box-shadow: 0 600px 18px rgba(0,0,0,0.08);  
-  backdrop-filter: blur(6px); /* 背景ぼかし（対応ブラウザのみ） */
-}
+/* src/app/globals.css の最下部などに追記 */
 
-.box21 {
-  background: rgba(94, 255, 217, 0.379); /* 薄い白 */
-  padding: 18px;
-  border-radius: 24px; /* rounded-3xl と併用してもOK */
-  box-shadow: 0 600px 18px rgba(0,0,0,0.08);  
-  backdrop-filter: blur(6px); /* 背景ぼかし（対応ブラウザのみ） */
-}
-
-/* ボタンスタイル */
-
-.a {
-  background: #eee;                /* 薄いグレーの背景 */
-  border-radius: 9999px;           /* 極大の角丸=ピル型ボタン */
-  position: relative;              /* 擬似要素(::after)を相対配置するための基準 */
-  display: flex;                   /* 中身をフレックスで横並び・中央寄せ */
-  justify-content: space-around;   /* 横方向の余白を均等配分（要素が複数のとき有効） */
-  align-items: center;             /* 縦方向の中央揃え */
-  margin: auto;                    /* 親の幅が許せば左右中央寄せ */
-  max-width: 250px;                /* ボタンの最大幅 */
-  padding: 10px 25px;              /* 内側の余白（上下10/左右25） */
-  font-family: "Noto Sans Japanese"; /* フォント（環境に無いと適用されない点に注意） */
-  text-decoration: none;           /* リンクの下線を消す */
-  color: #333;                     /* 文字色（濃いグレー） */
-  line-height: 1.8;                /* 行の高さ（文字が詰まらないように） */
-  transition: 0.3s ease-in-out;    /* hover時の色などを滑らかに変化 */
-  font-weight: 500;                /* 中太字 */
-}
-
-.a:after {
-  content: "";                     /* 右矢印を擬似要素で作る（中身は空） */
-  position: absolute;
-  top: 50%;                        /* ボタンの垂直中央に配置して… */
-  bottom: 0;                       /* （bottom指定はここでは不要。topだけでOK） */
-  right: 2rem;                     /* 右から2remの位置 */
-  font-size: 90%;                  /* （テキストではないので実質影響小） */
-  display: flex;                   /* 中央寄せ用（実際は幅高6pxなので無くてもOK） */
+/* 地動説レイアウト */
+.galaxy-map-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  /* 太陽と惑星を中央に配置するためのコンテナ */
+  display: flex;
   justify-content: center;
   align-items: center;
-  transition: right 0.3s;          /* 右位置だけアニメーション */
-  width: 6px; height: 6px;         /* 小さな正方形… */
-  border-top: solid 2px currentColor;  /* 上・右の境界線で… */
-  border-right: solid 2px currentColor;/* …45度回転して矢印風に見せる */
-  transform: translateY(-50%) rotate(45deg); /* 中央合わせ & 斜め矢印 */
 }
 
-.a:hover {
-  background: #00a6ff;                /* ホバーで背景を濃く */
-  color: #FFF;                     /* 文字色を白に */
+.sun-wrapper {
+  z-index: 10;
 }
 
-.a:hover:after {
-  right: 1.4rem;                   /* 矢印が少し左へスライド（→動きの演出） */
+.planet-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 中央に配置するための基準 */
 }

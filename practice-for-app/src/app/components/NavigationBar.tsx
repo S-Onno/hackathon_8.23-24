@@ -6,9 +6,10 @@ import Image from 'next/image';
 
 const navItems = [
   { label: 'My Page', href: '/mypage' },
-  { label: '学習', href: '/study' },
+  { label: '学習記録', href: '/study' },
   { label: 'フレンド', href: '/friends' },
   { label: '単語帳', href: '/word-list' },
+  { label: '暗記クイズ', href: '/memorize' },
 ];
 
 export default function NavigationBar() {
