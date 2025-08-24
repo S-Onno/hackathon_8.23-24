@@ -86,6 +86,9 @@ export default function GalaxyMap({ planets }: GalaxyMapProps) {
             className="rounded-full shadow-lg border-4 border-yellow-400"
           />
         </Link>
+        <div className="text-white text-base mt-2 text-center whitespace-nowrap">
+          {sun.name}
+        </div>
       </div>
 
       {/* 惑星の公転 */}
@@ -102,7 +105,7 @@ export default function GalaxyMap({ planets }: GalaxyMapProps) {
             }}
           >
             <Link href={planet.route} className="planet-link">
-              <Image
+              <Image 
                 src={planet.avatar}
                 alt={planet.name}
                 width={80}
@@ -110,6 +113,9 @@ export default function GalaxyMap({ planets }: GalaxyMapProps) {
                 className="rounded-full shadow-lg border-2 border-blue-400 hover:scale-110 transition-transform"
               />
             </Link>
+            <div className="text-white text-sm mt-1 text-center whitespace-nowrap">
+              {planet.name}
+            </div>
           </div>
         );
       })}

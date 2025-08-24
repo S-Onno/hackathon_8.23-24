@@ -1,7 +1,6 @@
 //"use client"
 
 import NavButton from "./components/NavButton";
-import StarCanvas from "./components/StarCanvas";
 import NightStarCanvas from "./components/StarCanvas";
 import Image from 'next/image';
 
