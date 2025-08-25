@@ -45,11 +45,20 @@ export default function StudyPage() {
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
+    const alarmSound = new Audio('/_sounds/alarm.mp3'); //アラーム音のインスタンス化
     if (isRunning) {
       interval = setInterval(() => {
         setTime((prev) => {
           if (mode === "stopwatch") return prev + 1;
+           if (mode === "timer" && prev === 1) {
+          // タイマーが0になる直前にアラーム音を再生
+          alarmSound.play();
+        }
           if (mode === "timer") return Math.max(prev - 1, 0);
+           if (mode === "pomodoro" && prev === 1) {
+          // タイマーが0になる直前にアラーム音を再生
+          alarmSound.play();
+        }
           if (mode === "pomodoro") {
             if (prev <= 1) {
               const nextIsBreak = !isBreak;
