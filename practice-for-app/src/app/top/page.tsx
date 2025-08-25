@@ -1,6 +1,7 @@
 // pages/top/page.tsx
 import GalaxyMap from '../components/GalaxyMap';
 import StarCanvas from '../components/StarCanvas';
+import Image from 'next/image';
 import NavigationBar from '../components/NavigationBar';
 
 const planets = [
@@ -10,10 +11,10 @@ const planets = [
   { id: '単語帳', name: '単語帳', route: '/word-list', avatar: '/_images/moon.png', orbitRadius: 170, animationDuration: 7 ,isSun: false},
   { id: '暗記クイズ', name: '暗記クイズ', route: '/memorize', avatar: '/_images/mikamoon.png', orbitRadius: 170, animationDuration: 8 ,isSun: false},
   
-  { id: 'yasu', name: 'やす', route: '/friend/yasu', avatar: '/_images/earth.png', orbitRadius: 270, animationDuration: 10 ,isSun: false},
-  { id: 'nakasone', name: 'なかそね', route: '/friend/nakasone', avatar: '/_images/EarthLv3.png', orbitRadius: 270, animationDuration: 11 ,isSun: false},
-  { id: 'tarutaru', name: 'たるたる', route: '/friend/tarutaru', avatar: '/_images/EarthLv1.png', orbitRadius: 270, animationDuration: 12 ,isSun: false},
-  { id: 'bokutti', name: 'ぼくっち', route: '/friend/bokutti', avatar: '/_images/EarthLv0png.png', orbitRadius: 270, animationDuration: 13 ,isSun: false},
+  { id: 'yasu', name: 'やす', route: '/friend/yasu', avatar: '/_images/earth.png', orbitRadius: 300, animationDuration: 10 ,isSun: false},
+  { id: 'nakasone', name: 'なかそね', route: '/friend/nakasone', avatar: '/_images/earth.png', orbitRadius: 300, animationDuration: 11 ,isSun: false},
+  { id: 'tarutaru', name: 'たるたる', route: '/friend/tarutaru', avatar: '/_images/earth.png', orbitRadius: 300, animationDuration: 12 ,isSun: false},
+  { id: 'bokutti', name: 'ぼくっち', route: '/friend/bokutti', avatar: '/_images/earth.png', orbitRadius: 300, animationDuration: 13 ,isSun: false},
 ];
 export default function HomePage() {
   return (
