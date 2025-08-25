@@ -9,6 +9,7 @@ const navItems = [
   { label: '学習', href: '/study' },
   { label: 'フレンド', href: '/friends' },
   { label: '単語帳', href: '/word-list' },
+  { label: '単語クイズ', href: '/memorize' },
 ];
 
 export default function NavigationBar() {
