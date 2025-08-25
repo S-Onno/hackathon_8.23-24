@@ -102,7 +102,7 @@ export default function StudyPage() {
       <StarCanvas />
 
       {/* タイマーUI本体 */}
-      <h2 className="text-3xl font-bold text-center mb-12">学習時間記録</h2>
+      <h1 className="text-3xl font-bold text-center tracking-wide mt-8 mb-4">学習時間記録</h1>
       <div className="bg-white text-gray-800 rounded-lg shadow-lg p-6 gap-4 w-full max-w-md flex flex-col items-center">
         {/* モード切り替えボタン（タイマー／ストップウォッチ／ポモドーロ） */}
         <div className="flex gap-4 mb-20">
