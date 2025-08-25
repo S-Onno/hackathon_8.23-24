@@ -20,7 +20,7 @@ export default function Loading() {
 
   useEffect(() => {
     // クライアント側でのみ実行
-    const randomImage = Math.random() > 0.5 ? image1 : image2;
+    const randomImage = Math.random() > 0.1 ? image1 : image2;
     setSelectedImage(randomImage);
   }, []); // 空の依存配列でコンポーネントマウント時に一度だけ実行
 
