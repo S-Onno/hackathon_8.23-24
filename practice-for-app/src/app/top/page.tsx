@@ -1,6 +1,7 @@
 // pages/top/page.tsx
 import GalaxyMap from '../components/GalaxyMap';
 import StarCanvas from '../components/StarCanvas';
+import Image from 'next/image';
 import NavigationBar from '../components/NavigationBar';
 
 const planets = [

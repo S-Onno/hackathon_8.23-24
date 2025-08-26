@@ -96,7 +96,6 @@ body {
 .sun-wrapper {
   z-index: 10;
 }
-
 .planet-wrapper {
   position: absolute;
   top: 50%;

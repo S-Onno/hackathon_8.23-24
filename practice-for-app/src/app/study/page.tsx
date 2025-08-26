@@ -45,11 +45,20 @@ export default function StudyPage() {
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
+    const alarmSound = new Audio('/_sounds/alarm.mp3'); //アラーム音のインスタンス化
     if (isRunning) {
       interval = setInterval(() => {
         setTime((prev) => {
           if (mode === "stopwatch") return prev + 1;
+           if (mode === "timer" && prev === 1) {
+          // タイマーが0になる直前にアラーム音を再生
+          alarmSound.play();
+        }
           if (mode === "timer") return Math.max(prev - 1, 0);
+           if (mode === "pomodoro" && prev === 1) {
+          // タイマーが0になる直前にアラーム音を再生
+          alarmSound.play();
+        }
           if (mode === "pomodoro") {
             if (prev <= 1) {
               const nextIsBreak = !isBreak;
@@ -102,7 +111,7 @@ export default function StudyPage() {
       <StarCanvas />
 
       {/* タイマーUI本体 */}
-      <h2 className="text-3xl font-bold text-center mb-12">学習時間記録</h2>
+      <h1 className="text-3xl font-bold text-center tracking-wide mt-8 mb-4">学習時間記録</h1>
       <div className="bg-white text-gray-800 rounded-lg shadow-lg p-6 gap-4 w-full max-w-md flex flex-col items-center">
         {/* モード切り替えボタン（タイマー／ストップウォッチ／ポモドーロ） */}
         <div className="flex gap-4 mb-20">
