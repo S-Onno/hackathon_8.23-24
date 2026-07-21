@@ -2,34 +2,44 @@
   "name": "practice-for-app",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit --pretty false",
+    "test": "node --test",
+    "prisma:generate": "prisma generate",
+    "db:migrate": "node scripts/ensure-sqlite-db.mjs && prisma migrate dev",
+    "db:deploy": "node scripts/ensure-sqlite-db.mjs && prisma migrate deploy",
+    "db:seed": "node prisma/seed.mjs",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@prisma/client": "^6.14.0",
-    "@react-three/drei": "^10.6.1",
-    "@react-three/fiber": "^9.3.0",
+    "@prisma/client": "6.19.3",
     "chart.js": "^4.5.0",
-    "next": "15.4.5",
-    "npm": "^11.5.2",
-    "react": "19.1.0",
+    "next": "15.5.18",
+    "react": "19.1.8",
     "react-chartjs-2": "^5.3.0",
-    "react-dom": "19.1.0",
-    "react-icons": "^5.5.0"
+    "react-dom": "19.1.8"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.4.5",
-    "prisma": "^6.14.0",
+    "eslint-config-next": "15.5.18",
+    "prisma": "6.19.3",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "postcss": "8.5.20"
   }
 }

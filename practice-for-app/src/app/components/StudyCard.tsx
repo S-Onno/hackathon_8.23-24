@@ -1,11 +1,10 @@
 type Props = {
-  name: string;
   today: number;
   week: number;
   month: number;
 };
 
-export default function StudyCard({ name, today, week, month }: Props) {
+export default function StudyCard({ today, week, month }: Props) {
   return (
     <div className="w-full bg-indigo-900 text-white py-4 px-6 rounded-lg shadow-md flex justify-around items-center mt-4">
       <div className="text-center">

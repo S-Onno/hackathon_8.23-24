@@ -1,8 +1,10 @@
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
+import type { FriendDetails } from '@/types/friend';
 
-export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
-  const mockData = {
+const friendsById: Record<string, FriendDetails> = {
     nathalie: {
+      id: 'nathalie',
       name: "なさり",
       today: 2,
       week: 10,
@@ -20,6 +22,7 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
       },
     },
     tarutaru: {
+      id: 'tarutaru',
       name: "たるたる",
       today: 3,
       week: 8,
@@ -37,6 +40,7 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
       },
     },
     yasu: {
+      id: 'yasu',
       name: "やす",
       today: 4,
       week: 12,
@@ -54,6 +58,7 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
       },
     },
     nakasone: {
+      id: 'nakasone',
       name: "なかそね",
       today: 6,
       week: 15,
@@ -71,37 +76,33 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
       },
     },
     bokutti: {
+      id: 'bokutti',
       name: "ぼくっち",
       today: 0,
       week: 0,
       month: 0,
       lastStudyDate: "2025-08-17",
       message: "TOEICのスコアアップを目指しています",
+      studyLogs: [],
       profile: {
         name: "ぼくっち",
         goal: "TOEICのスコアアップを目指しています",
         favoriteSubject: "英語",
       },
     },
-  };
+};
 
-  const result = mockData[params.id] || {
-    name: '不明',
-    today: 0,
-    week: 0,
-    month: 0,
-    lastStudyDate: '',
-    message: '',
-    studyLogs: [],
-    profile: {
-      name: '不明',
-      goal: '',
-      favoriteSubject: '',
-    },
-  };
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
 
-  return new Response(JSON.stringify(result), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  });
+export async function GET(_: NextRequest, { params }: RouteContext) {
+  const { id } = await params;
+  const friend = friendsById[id];
+
+  if (!friend) {
+    return NextResponse.json({ error: 'Friend not found' }, { status: 404 });
+  }
+
+  return NextResponse.json(friend);
 }

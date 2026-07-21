@@ -7,14 +7,12 @@ type NavButtonProps = {
 };
 
 export default function NavButton({ href, children, className = "" }: NavButtonProps) {
-    return (
-        <Link href={href}>
-            <button
-                type="button"
-                className={`px-6 py-2 rounded transform transition duration-200 hover:scale-125 ${className}`}
-            >
-                {children}
-            </button>
-        </Link>
-    )
+  return (
+    <Link
+      href={href}
+      className={`inline-flex items-center justify-center rounded px-6 py-2 transition duration-200 ${className}`}
+    >
+      {children}
+    </Link>
+  );
 }

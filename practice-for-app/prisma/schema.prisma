@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -14,29 +7,54 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model word_cards {
+model Account {
+  id           Int        @id @default(autoincrement())
+  email        String     @unique
+  username     String
+  passwordHash String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  sessions     Session[]
+  wordCards    WordCard[]
+  studyLogs    StudyLog[]
+}
+
+model Session {
+  id        Int      @id @default(autoincrement())
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  accountId Int
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId])
+  @@index([expiresAt])
+}
+
+model WordCard {
   id        Int      @id @default(autoincrement())
   question  String
   answer    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  ownerId   Int
+  owner     Account  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([ownerId, createdAt])
+  @@map("word_cards")
 }
 
+model StudyLog {
+  id              Int      @id @default(autoincrement())
+  clientSessionId String
+  subject         String
+  durationSeconds Int
+  startedAt       DateTime
+  endedAt         DateTime
+  createdAt       DateTime @default(now())
+  ownerId         Int
+  owner           Account  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-/*
-generator client:
-
-provider = "prisma-client-js"：Prisma Client（TypeScript/JS 用クライアント）を生成する設定です。
-output = "../src/generated/prisma"：生成されたクライアントが src/generated/prisma に書き出されます（リポジトリ内パス）。
-datasource db:
-
-provider = "sqlite"：データソースは SQLite を使う設定です。
-url = env("DATABASE_URL")：接続先は環境変数 DATABASE_URL（例: file:./dev.db）で指定します。
-model word_cards:
-
-id Int @id @default(autoincrement())：主キーの自動増分整数。
-question String：問題テキスト（必須）。
-answer String：解答テキスト（必須）。
-createdAt DateTime @default(now())：作成時刻を自動設定。
-updatedAt DateTime @updatedAt：更新時刻を自動更新。
-*/
+  @@unique([ownerId, clientSessionId])
+  @@index([ownerId, startedAt])
+}

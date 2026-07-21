@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import '@/app/globals.css';
@@ -13,10 +13,6 @@ interface Planet {
   orbitRadius: number;
   animationDuration: number;
   isSun?: boolean;
-}
-
-interface PlanetPositions {
-  [key: string]: number;
 }
 
 interface GalaxyMapProps {
@@ -32,65 +28,48 @@ const SOFT_BLUE_NEON_COLORS = [
 ];
 
 export default function GalaxyMap({ planets }: GalaxyMapProps) {
-  const [positions, setPositions] = useState<PlanetPositions>({});
-  const [mounted, setMounted] = useState(false); // クライアントマウント確認
-  const sun = planets.find(p => p.isSun);
-  const planetsToAnimate = planets.filter(p => !p.isSun);
-  const animationFrameId = useRef<number | null>(null);
-  const initialAnglesRef = useRef<Record<string, number>>({});
-  const colorMapRef = useRef<Record<string, string>>({});
+  const sun = useMemo(() => planets.find((planet) => planet.isSun), [planets]);
+  const planetsToAnimate = useMemo(
+    () => planets.filter((planet) => !planet.isSun),
+    [planets],
+  );
+  const planetNodes = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
-    setMounted(true); // クライアント側マウント完了
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return; // SSR時は何もしない
-
-    if (planetsToAnimate.length > 0) {
-      const step = (2 * Math.PI) / planetsToAnimate.length;
-      planetsToAnimate.forEach((planet, i) => {
-        initialAnglesRef.current[planet.id] = step * i;
-        colorMapRef.current[planet.id] = SOFT_BLUE_NEON_COLORS[i % SOFT_BLUE_NEON_COLORS.length];
-      });
+    if (planetsToAnimate.length === 0) {
+      return;
     }
 
-    let lastTime = performance.now();
+    const angleStep = (2 * Math.PI) / planetsToAnimate.length;
+    const startedAt = performance.now();
+    let animationFrameId = 0;
 
     const animate = (currentTime: number) => {
-      const deltaTime = (currentTime - lastTime) / 1000;
-      lastTime = currentTime;
+      const elapsedSeconds = (currentTime - startedAt) / 1000;
 
-      setPositions(prevPositions => {
-        const newPositions: PlanetPositions = { ...prevPositions };
-        planetsToAnimate.forEach(planet => {
-          const { id, orbitRadius, animationDuration } = planet;
-          const currentAngle = newPositions[id] ?? initialAnglesRef.current[id] ?? 0;
-          const rotationSpeed = (2 * Math.PI) / animationDuration;
-          const newAngle = currentAngle + rotationSpeed * deltaTime;
+      planetsToAnimate.forEach((planet, index) => {
+        const node = planetNodes.current[planet.id];
+        if (!node) return;
 
-          newPositions[id] = newAngle;
-          newPositions[`${id}-x`] = orbitRadius * Math.cos(newAngle);
-          newPositions[`${id}-y`] = orbitRadius * Math.sin(newAngle);
-        });
-        return newPositions;
+        const duration = Math.max(planet.animationDuration, 1);
+        const angle = angleStep * index + (elapsedSeconds * 2 * Math.PI) / duration;
+        const x = planet.orbitRadius * Math.cos(angle);
+        const y = planet.orbitRadius * Math.sin(angle);
+        node.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
       });
 
-      animationFrameId.current = requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
     };
 
-    animationFrameId.current = requestAnimationFrame(animate);
+    animationFrameId = requestAnimationFrame(animate);
 
-    return () => {
-      if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
-    };
-  }, [mounted, planetsToAnimate]);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [planetsToAnimate]);
 
   if (!sun) return null;
-  if (!mounted) return null; // SSR時は描画しない
 
   return (
-    <div className="galaxy-map-container relative w-full h-screen flex items-center justify-center bg-night-sky overflow-hidden">
+    <div className="galaxy-map-container relative w-full h-screen flex items-center justify-center bg-[#050816] overflow-hidden">
       {planetsToAnimate.map(planet => (
         <div
           key={`${planet.id}-orbit`}
@@ -121,16 +100,20 @@ export default function GalaxyMap({ planets }: GalaxyMapProps) {
         </div>
       </div>
 
-      {planetsToAnimate.map(planet => {
-        const x = positions[`${planet.id}-x`] || 0;
-        const y = positions[`${planet.id}-y`] || 0;
-        const color = colorMapRef.current[planet.id];
+      {planetsToAnimate.map((planet, index) => {
+        const initialAngle = (2 * Math.PI * index) / planetsToAnimate.length;
+        const x = planet.orbitRadius * Math.cos(initialAngle);
+        const y = planet.orbitRadius * Math.sin(initialAngle);
+        const color = SOFT_BLUE_NEON_COLORS[index % SOFT_BLUE_NEON_COLORS.length];
         const size = 60;
-        const glowOffset = 2 + Math.sin(performance.now() / 300 + planet.id.length) * 2;
+        const glowOffset = 2 + (index % 3);
 
         return (
           <div
             key={planet.id}
+            ref={(node) => {
+              planetNodes.current[planet.id] = node;
+            }}
             className="absolute"
             style={{
               top: '50%',

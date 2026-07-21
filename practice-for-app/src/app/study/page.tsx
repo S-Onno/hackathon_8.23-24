@@ -1,193 +1,364 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import NavigationBar from "../components/NavigationBar";
-import StarCanvas from "../components/StarCanvas"; 
-//import BackToTopButton from "../components/BackTop"; 
+import { useCallback, useEffect, useRef, useState } from 'react';
+import type { CreateStudyLogRequest } from '@/types/study-log';
+import NavigationBar from '../components/NavigationBar';
+import StarCanvas from '../components/StarCanvas';
+
+const MODES = ['timer', 'stopwatch', 'pomodoro'] as const;
+type TimerMode = (typeof MODES)[number];
+
+const MODE_LABELS: Record<TimerMode, string> = {
+  timer: 'タイマー',
+  stopwatch: 'ストップウォッチ',
+  pomodoro: 'ポモドーロ',
+};
+
+const WORK_DURATION_SECONDS = 25 * 60;
+const BREAK_DURATION_SECONDS = 5 * 60;
+const MAX_INPUT_MINUTES = 999;
+
+function toBoundedInteger(value: string, max: number) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return 0;
+  return Math.min(Math.max(Math.trunc(parsed), 0), max);
+}
+
+function formatTime(totalSeconds: number, showHours: boolean) {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (showHours) {
+    return `${hours.toString().padStart(2, '0')}:${minutes
+      .toString()
+      .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  return `${Math.floor(totalSeconds / 60).toString().padStart(2, '0')}:${seconds
+    .toString()
+    .padStart(2, '0')}`;
+}
 
 export default function StudyPage() {
-  // タイマーのモードを管理（3種類：タイマー、ストップウォッチ、ポモドーロ）
-  const [mode, setMode] = useState<"timer" | "stopwatch" | "pomodoro">("stopwatch");
-
-  // 表示される時間（秒単位）
+  const [mode, setMode] = useState<TimerMode>('stopwatch');
   const [time, setTime] = useState(0);
-
-  // タイマーが動作中かどうか
+  const [measuredSeconds, setMeasuredSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-
-  // タイマー用の分・秒入力（ユーザーが設定）
   const [inputMinutes, setInputMinutes] = useState(0);
   const [inputSeconds, setInputSeconds] = useState(0);
-
-  // ポモドーロ用：作業中か休憩中かを管理
   const [isBreak, setIsBreak] = useState(false);
+  const [subject, setSubject] = useState('');
+  const [sessionStartedAt, setSessionStartedAt] = useState<string | null>(null);
+  const [sessionEndedAt, setSessionEndedAt] = useState<string | null>(null);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
 
-  // ポモドーロの作業時間と休憩時間（秒単位）
-  const WORK_DURATION = 25 * 60;
-  const BREAK_DURATION = 5 * 60;
+  const timeRef = useRef(0);
+  const measuredSecondsRef = useRef(0);
+  const clientSessionIdRef = useRef<string | null>(null);
+  const alarmRef = useRef<HTMLAudioElement | null>(null);
+  const configuredTimerDuration = inputMinutes * 60 + inputSeconds;
 
-  // タイマーの動作処理（1秒ごとに時間を更新）
-  // モード変更時に時間を初期化
+  const updateTime = useCallback((seconds: number) => {
+    timeRef.current = seconds;
+    setTime(seconds);
+  }, []);
+
+  const updateMeasuredSeconds = useCallback((seconds: number) => {
+    measuredSecondsRef.current = seconds;
+    setMeasuredSeconds(seconds);
+  }, []);
+
+  const playAlarm = useCallback(() => {
+    const alarm = alarmRef.current;
+    if (!alarm) return;
+
+    alarm.currentTime = 0;
+    void alarm.play().catch((error: unknown) => {
+      console.warn('アラーム音を再生できませんでした:', error);
+    });
+  }, []);
+
   useEffect(() => {
-    setIsRunning(false); // モード切り替え時は一旦停止
+    const alarm = new Audio('/_sounds/alarm.mp3');
+    alarm.preload = 'auto';
+    alarmRef.current = alarm;
 
-    if (mode === "timer") {
-      setTime(inputMinutes * 60 + inputSeconds); // 入力値に基づいて初期化
-    } else if (mode === "pomodoro") {
-      setIsBreak(false); // 作業モードに戻す
-      setTime(WORK_DURATION); // 作業時間で初期化
+    return () => {
+      alarm.pause();
+      alarmRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    setIsRunning(false);
+    setIsBreak(false);
+    updateMeasuredSeconds(0);
+    setSessionStartedAt(null);
+    setSessionEndedAt(null);
+    clientSessionIdRef.current = null;
+    setSaveStatus('idle');
+
+    if (mode === 'timer') {
+      updateTime(configuredTimerDuration);
+    } else if (mode === 'pomodoro') {
+      updateTime(WORK_DURATION_SECONDS);
     } else {
-      setTime(0); // ストップウォッチは0からスタート
+      updateTime(0);
     }
-  }, [mode, inputMinutes, inputSeconds]);
+  }, [configuredTimerDuration, mode, updateMeasuredSeconds, updateTime]);
 
-  // タイマーの動作処理（1秒ごとに時間を更新）
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    if (!isRunning) return;
 
-    const alarmSound = new Audio('/_sounds/alarm.mp3'); //アラーム音のインスタンス化
-    if (isRunning) {
-      interval = setInterval(() => {
-        setTime((prev) => {
-          if (mode === "stopwatch") return prev + 1;
-           if (mode === "timer" && prev === 1) {
-          // タイマーが0になる直前にアラーム音を再生
-          alarmSound.play();
-        }
-          if (mode === "timer") return Math.max(prev - 1, 0);
-           if (mode === "pomodoro" && prev === 1) {
-          // タイマーが0になる直前にアラーム音を再生
-          alarmSound.play();
-        }
-          if (mode === "pomodoro") {
-            if (prev <= 1) {
-              const nextIsBreak = !isBreak;
-              setIsBreak(nextIsBreak);
-              return nextIsBreak ? BREAK_DURATION : WORK_DURATION;
-            }
-            return prev - 1;
-          }
-          return prev;
-        });
-      }, 1000);
-    }
+    const initialTime = timeRef.current;
+    const initialMeasuredSeconds = measuredSecondsRef.current;
+    const runStartedAt = performance.now();
+    let completed = false;
 
-    return () => clearInterval(interval);
-  }, [isRunning, mode, isBreak]);
+    const tick = () => {
+      const elapsedSeconds = Math.floor((performance.now() - runStartedAt) / 1000);
+      if (mode !== 'pomodoro' || !isBreak) {
+        updateMeasuredSeconds(initialMeasuredSeconds + elapsedSeconds);
+      }
 
-  // スタートボタンの処理
+      if (mode === 'stopwatch') {
+        updateTime(initialTime + elapsedSeconds);
+        return;
+      }
+
+      const remainingSeconds = Math.max(initialTime - elapsedSeconds, 0);
+      updateTime(remainingSeconds);
+
+      if (remainingSeconds > 0 || completed) return;
+      completed = true;
+      playAlarm();
+
+      if (mode === 'timer') {
+        updateMeasuredSeconds(initialMeasuredSeconds + initialTime);
+        setSessionEndedAt(new Date().toISOString());
+        setIsRunning(false);
+        return;
+      }
+
+      const nextIsBreak = !isBreak;
+      setIsBreak(nextIsBreak);
+      updateTime(nextIsBreak ? BREAK_DURATION_SECONDS : WORK_DURATION_SECONDS);
+    };
+
+    tick();
+    const intervalId = window.setInterval(tick, 250);
+    return () => window.clearInterval(intervalId);
+  }, [isBreak, isRunning, mode, playAlarm, updateMeasuredSeconds, updateTime]);
+
   const handleStart = () => {
-    if (mode === "timer") {
-      // タイマー：入力された分・秒を秒に変換してセット
-      setTime(inputMinutes * 60 + inputSeconds);
-    } else if (mode === "pomodoro") {
-      // ポモドーロ：作業モードからスタート
-      setIsBreak(false);
-      setTime(WORK_DURATION);
+    if (isRunning) return;
+
+    if (mode === 'timer' && timeRef.current === 0) {
+      if (configuredTimerDuration === 0) return;
+      updateTime(configuredTimerDuration);
+      updateMeasuredSeconds(0);
+      setSessionStartedAt(new Date().toISOString());
+      clientSessionIdRef.current = crypto.randomUUID();
+    } else if (!sessionStartedAt) {
+      setSessionStartedAt(new Date().toISOString());
+      clientSessionIdRef.current = crypto.randomUUID();
     }
+
+    setSessionEndedAt(null);
+    setSaveStatus('idle');
     setIsRunning(true);
   };
 
-  // ストップボタンの処理：動作停止
-  const handleStop = () => setIsRunning(false);
+  const handleStop = () => {
+    setIsRunning(false);
+    setSessionEndedAt(new Date().toISOString());
+  };
 
-  // リセットボタンの処理：初期状態に戻す
   const handleReset = () => {
     setIsRunning(false);
-    if (mode === "timer") {
-      setTime(0); // タイマーは0にリセット
-    } else if (mode === "pomodoro") {
-      setIsBreak(false);
-      setTime(WORK_DURATION);
+    setIsBreak(false);
+    updateMeasuredSeconds(0);
+    setSessionStartedAt(null);
+    setSessionEndedAt(null);
+    clientSessionIdRef.current = null;
+    setSaveStatus('idle');
+
+    if (mode === 'timer') {
+      updateTime(configuredTimerDuration);
+    } else if (mode === 'pomodoro') {
+      updateTime(WORK_DURATION_SECONDS);
     } else {
-      setTime(0);
+      updateTime(0);
     }
   };
 
+  const handleSave = async () => {
+    const normalizedSubject = subject.trim();
+    if (!normalizedSubject || measuredSeconds <= 0 || isRunning || !sessionStartedAt) return;
+    const clientSessionId = clientSessionIdRef.current ?? crypto.randomUUID();
+    clientSessionIdRef.current = clientSessionId;
+
+    const payload: CreateStudyLogRequest = {
+      clientSessionId,
+      subject: normalizedSubject,
+      durationSeconds: measuredSeconds,
+      startedAt: sessionStartedAt,
+      endedAt: sessionEndedAt ?? new Date().toISOString(),
+    };
+
+    setSaveStatus('saving');
+    try {
+      const response = await fetch('/api/study-logs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`学習記録の保存に失敗しました (${response.status})`);
+      }
+
+      setIsRunning(false);
+      setIsBreak(false);
+      updateMeasuredSeconds(0);
+      setSessionStartedAt(null);
+      setSessionEndedAt(null);
+      clientSessionIdRef.current = null;
+      if (mode === 'timer') {
+        updateTime(configuredTimerDuration);
+      } else if (mode === 'pomodoro') {
+        updateTime(WORK_DURATION_SECONDS);
+      } else {
+        updateTime(0);
+      }
+      setSaveStatus('success');
+    } catch (error) {
+      console.error('Failed to save study log:', error);
+      setSaveStatus('error');
+    }
+  };
+
+  const startDisabled = isRunning || (mode === 'timer' && time === 0 && configuredTimerDuration === 0);
+  const saveDisabled =
+    isRunning ||
+    measuredSeconds <= 0 ||
+    subject.trim().length === 0 ||
+    saveStatus === 'saving' ||
+    saveStatus === 'success';
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-950 text-white pt-20 p-10 flex flex-col items-center">
-      {/* ナビゲーションバーと星空背景 */}
+    <main className="min-h-screen bg-gradient-to-b from-indigo-950 text-white pt-20 p-10 flex flex-col items-center">
       <NavigationBar />
       <StarCanvas />
 
-      {/* タイマーUI本体 */}
       <h1 className="text-3xl font-bold text-center tracking-wide mt-8 mb-4">学習時間記録</h1>
-      <div className="bg-white text-gray-800 rounded-lg shadow-lg p-6 gap-4 w-full max-w-md flex flex-col items-center">
-        {/* モード切り替えボタン（タイマー／ストップウォッチ／ポモドーロ） */}
-        <div className="flex gap-4 mb-20">
-          {["timer", "stopwatch", "pomodoro"].map((m) => (
+      <div className="bg-white text-gray-800 rounded-lg shadow-lg p-6 gap-5 w-full max-w-md flex flex-col items-center">
+        <div className="flex flex-wrap justify-center gap-3">
+          {MODES.map((timerMode) => (
             <button
-              key={m}
-              onClick={() => setMode(m as any)}
-              className={`px-4 py-2 rounded ${
-                mode === m ? "bg-indigo-950 text-white" : "bg-gray-200"
+              key={timerMode}
+              type="button"
+              disabled={isRunning}
+              onClick={() => setMode(timerMode)}
+              className={`px-4 py-2 rounded disabled:cursor-not-allowed disabled:opacity-50 ${
+                mode === timerMode ? 'bg-indigo-950 text-white' : 'bg-gray-200'
               }`}
             >
-              {m === "timer" ? "タイマー" : m === "stopwatch" ? "ストップウォッチ" : "ポモドーロ"}
+              {MODE_LABELS[timerMode]}
             </button>
           ))}
         </div>
 
-        {/* タイマー用の時間入力欄（分・秒） */}
-        {mode === "timer" && (
-          <div className="flex gap-2 mb-4">
+        {mode === 'timer' && (
+          <div className="flex items-center gap-2">
+            <label className="sr-only" htmlFor="timer-minutes">分</label>
             <input
+              id="timer-minutes"
               type="number"
               min="0"
+              max={MAX_INPUT_MINUTES}
+              disabled={isRunning}
               value={inputMinutes}
-              onChange={(e) => setInputMinutes(Number(e.target.value))}
-              className="w-20 px-2 py-1 border rounded text-center"
-              placeholder="分"
+              onChange={(event) => setInputMinutes(toBoundedInteger(event.target.value, MAX_INPUT_MINUTES))}
+              className="w-24 rounded border px-2 py-1 text-center disabled:bg-gray-100"
             />
-            <span className="text-xl">:</span>
+            <span aria-hidden="true">分</span>
+            <label className="sr-only" htmlFor="timer-seconds">秒</label>
             <input
+              id="timer-seconds"
               type="number"
               min="0"
               max="59"
+              disabled={isRunning}
               value={inputSeconds}
-              onChange={(e) => setInputSeconds(Number(e.target.value))}
-              className="w-20 px-2 py-1 border rounded text-center"
-              placeholder="秒"
+              onChange={(event) => setInputSeconds(toBoundedInteger(event.target.value, 59))}
+              className="w-20 rounded border px-2 py-1 text-center disabled:bg-gray-100"
             />
+            <span aria-hidden="true">秒</span>
           </div>
         )}
 
-        {/* ポモドーロモードの状態表示（作業中／休憩中） */}
-        {mode === "pomodoro" && (
-          <div className="mb-4 text-lg font-semibold">
-            {isBreak ? "休憩中 " : "作業中 "}
-          </div>
+        {mode === 'pomodoro' && (
+          <div className="text-lg font-semibold">{isBreak ? '休憩中' : '作業中'}</div>
         )}
 
-        {/* 時間表示（mm:ss形式） */}
-        <div className="text-5xl font-mono mb-40">
-          {/* {Math.floor(time / 60).toString().padStart(2, "0")}:
-          {(time % 60).toString().padStart(2, "0")}
-           */}
-          {(mode === "timer" || mode === "stopwatch")
-            ? `${Math.floor(time / 3600).toString().padStart(2, "0")}:${Math.floor((time % 3600) / 60).toString().padStart(2, "0")}:${(time % 60).toString().padStart(2, "0")}`
-            : `${Math.floor(time / 60).toString().padStart(2, "0")}:${(time % 60).toString().padStart(2, "0")}`}
+        <div className="font-mono text-5xl" role="timer" aria-live="off">
+          {formatTime(time, mode !== 'pomodoro')}
         </div>
 
-        {/* 操作ボタン群（スタート／ストップ／リセット） */}
+        <p className="text-sm text-gray-500">今回の計測時間: {formatTime(measuredSeconds, true)}</p>
+
         <div className="flex gap-2">
-          <button onClick={handleStart} className="px-4 py-2 bg-blue-600 text-white rounded">
-            スタート
+          <button
+            type="button"
+            disabled={startDisabled}
+            onClick={handleStart}
+            className="rounded bg-blue-600 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isRunning ? '実行中' : measuredSeconds > 0 ? '再開' : 'スタート'}
           </button>
-          <button onClick={handleStop} className="px-4 py-2 bg-red-400 text-white rounded">
+          <button
+            type="button"
+            disabled={!isRunning}
+            onClick={handleStop}
+            className="rounded bg-red-500 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+          >
             ストップ
           </button>
-          <button onClick={handleReset} className="px-4 py-2 bg-gray-400 text-white rounded">
+          <button type="button" onClick={handleReset} className="rounded bg-gray-500 px-4 py-2 text-white">
             リセット
           </button>
         </div>
-        {/* 学習時間の記録保存ボタン もしデータベースが完成してできたら追加していく */}
-        <div>
-          <button className="px-4 py-2 bg-green-400 text-white rounded">
-            記録を保存
+
+        <div className="w-full border-t pt-4">
+          <label className="mb-1 block text-sm font-semibold" htmlFor="study-subject">学習科目</label>
+          <input
+            id="study-subject"
+            type="text"
+            maxLength={100}
+            value={subject}
+            onChange={(event) => {
+              setSubject(event.target.value);
+              if (saveStatus === 'error') setSaveStatus('idle');
+            }}
+            placeholder="例: Next.js"
+            className="mb-3 w-full rounded border px-3 py-2"
+          />
+          <button
+            type="button"
+            disabled={saveDisabled}
+            onClick={() => void handleSave()}
+            className="w-full rounded bg-green-600 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {saveStatus === 'saving' ? '保存中...' : '記録を保存'}
           </button>
+          {saveStatus === 'success' && <p className="mt-2 text-sm text-green-700">学習記録を保存しました。</p>}
+          {saveStatus === 'error' && (
+            <p className="mt-2 text-sm text-red-600" role="alert">保存に失敗しました。時間をおいて再試行してください。</p>
+          )}
         </div>
       </div>
-    </div>
+    </main>
   );
 }

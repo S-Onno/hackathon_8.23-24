@@ -1,74 +1,91 @@
-'use client'
+'use client';
 
-import { Radar } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
-  RadialLinearScale,
-  PointElement,
-  LineElement,
   Filler,
-  Tooltip,
   Legend,
-} from 'chart.js'
-import { learningData } from '@/app/dummy_data/learningData'
-
-ChartJS.register(
-  RadialLinearScale,
-  PointElement,
   LineElement,
-  Filler,
+  PointElement,
+  RadialLinearScale,
   Tooltip,
-  Legend
-)
+  type ChartData,
+  type ChartOptions,
+  type Plugin,
+} from 'chart.js';
+import { Radar } from 'react-chartjs-2';
+import type { SubjectStudySummary } from '@/types/study-log';
 
-const options = {
+ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
+
+const options: ChartOptions<'radar'> = {
   maintainAspectRatio: false,
   scales: {
     r: {
-      min: 0,
-      max: 10,
+      beginAtZero: true,
       ticks: {
-        stepSize: 2,
+        callback: (value) => `${value}h`,
       },
       pointLabels: {
-        font: {
-          size: 14,
-        },
+        color: '#111827',
+        font: { size: 14 },
       },
+      grid: { color: 'rgba(107,114,128,0.25)' },
+      angleLines: { color: 'rgba(107,114,128,0.25)' },
     },
   },
-}
+  plugins: {
+    legend: {
+      labels: { color: '#111827' },
+    },
+  },
+};
 
-const backgroundPlugin = {
+const backgroundPlugin: Plugin<'radar'> = {
   id: 'customBackground',
-  beforeDraw: (chart: any) => {
-    const ctx = chart.ctx;
-    const { width, height } = chart;
+  beforeDraw: (chart) => {
+    const { ctx, width, height } = chart;
     ctx.save();
-
-    // グラデーション背景
-    const gradient = ctx.createLinearGradient(0, 0, 0, height);
-    gradient.addColorStop(0, '#ffffff'); // 深い紫
-    gradient.addColorStop(0.5, '#ffffff'); // 青紫
-    gradient.addColorStop(1, '#ffffff'); // 黒に近い紫
-
-    ctx.fillStyle = gradient;
+    ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, width, height);
     ctx.restore();
   },
 };
 
-export default function RadarChart() {
+type RadarChartProps = {
+  bySubject: SubjectStudySummary[];
+};
+
+export default function RadarChart({ bySubject }: RadarChartProps) {
+  if (bySubject.length === 0) {
+    return (
+      <section className="w-full max-w-md rounded-lg bg-white p-4 text-gray-900">
+        <h2 className="text-center text-xl font-bold">科目別の学習バランス</h2>
+        <p className="py-20 text-center text-gray-500">科目別の学習データはありません</p>
+      </section>
+    );
+  }
+
+  const data: ChartData<'radar'> = {
+    labels: bySubject.map((item) => item.subject),
+    datasets: [
+      {
+        label: '今月の学習時間',
+        data: bySubject.map((item) => item.durationSeconds / 3600),
+        backgroundColor: 'rgba(37,99,235,0.2)',
+        borderColor: '#2563eb',
+        pointBackgroundColor: '#2563eb',
+        pointBorderColor: '#ffffff',
+        borderWidth: 2,
+      },
+    ],
+  };
+
   return (
-    <div className="max-w-md w-full p-4 bg-white rounded-lg backdrop-blur-md">
-      <h2 className="text-xl font-bold mb-4 text-center text-black">今日の学習バランス</h2>
-      <div className="relative h-64 w-full">
-      <Radar
-        data={learningData}
-        options={options}
-        plugins={[backgroundPlugin]}
-      />
+    <section className="w-full max-w-md rounded-lg bg-white p-4 text-gray-900">
+      <h2 className="mb-4 text-center text-xl font-bold">科目別の学習バランス</h2>
+      <div className="relative h-72 w-full">
+        <Radar data={data} options={options} plugins={[backgroundPlugin]} />
       </div>
-    </div>
+    </section>
   );
 }

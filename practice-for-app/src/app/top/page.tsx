@@ -1,8 +1,6 @@
 // pages/top/page.tsx
 import GalaxyMap from '../components/GalaxyMap';
 import StarCanvas from '../components/StarCanvas';
-import Image from 'next/image';
-import NavigationBar from '../components/NavigationBar';
 
 const planets = [
   { id: 'mypage', name: '太陽', route: '/mypage', avatar: '/_images/sun.png', orbitRadius: 0, animationDuration: 0 , isSun: true },

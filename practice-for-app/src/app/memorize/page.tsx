@@ -1,6 +1,7 @@
 'use client';
 import React, { useCallback, useEffect, useState } from 'react';
 import { WordCard } from '@/types/card';
+import { fetchWordCards, isAbortError } from '@/utils/word-card';
 import NightStarCanvas from "../components/StarCanvas";
 import NavigationBar from '../components/NavigationBar';
 
@@ -10,6 +11,7 @@ export default function QuizPage() {
   const [showAnswer, setShowAnswer] = useState(false);
   const [loading, setLoading] = useState(true);
   const [revealing, setRevealing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // -------- パレット / 共通スタイル --------
   const palette = {
@@ -24,7 +26,6 @@ export default function QuizPage() {
     fontFamily: 'system-ui, sans-serif' 
   };
   const panelStyle: React.CSSProperties = { background: palette.panel, border: `1px solid ${palette.border}`, borderRadius: 16, padding: 32, boxShadow: '0 4px 18px -4px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,0.02)', backdropFilter: 'blur(4px)' };
-  const headingStyle: React.CSSProperties = { margin: '0 0 18px', fontSize: 26, fontWeight: 700, letterSpacing: '.5px' };
   const subInfoStyle: React.CSSProperties = { marginBottom: 20, fontSize: 14, color: palette.sub, display: 'flex', gap: 20, flexWrap: 'wrap' };
   const buttonBase: React.CSSProperties = { padding: '10px 18px', borderRadius: 10, border: 'none', fontWeight: 600, fontSize: 14, cursor: 'pointer', letterSpacing: '.5px', display: 'inline-flex', alignItems: 'center', gap: 6, boxShadow: '0 2px 4px rgba(0,0,0,.4)', transition: 'transform .12s, box-shadow .2s', color: '#fff' };
   const buttonVariants = { primary: { background: palette.blue }, toggle: { background: palette.orange }, neutral: { background: palette.gray }, next: { background: palette.green }, danger: { background: palette.red } } as const;
@@ -36,18 +37,27 @@ export default function QuizPage() {
   const flexRow: React.CSSProperties = { display: 'flex', gap: 12, flexWrap: 'wrap' };
   const tagStyle: React.CSSProperties = { position: 'absolute', top: 10, right: 14, fontSize: 11, fontWeight: 600, color: palette.sub, letterSpacing: '.5px' };
 
-  const fetchCards = useCallback(async () => {
+  const fetchCards = useCallback(async (signal?: AbortSignal) => {
     try {
       setLoading(true);
-      const res = await fetch('/api/cards');
-      const data: WordCard[] = await res.json();
-      setCards(data);
+      setError(null);
+      setCards(await fetchWordCards(signal));
+      setCurrentIndex(null);
+    } catch (loadError) {
+      if (!isAbortError(loadError)) {
+        console.error('Failed to load cards:', loadError);
+        setError('カードを取得できませんでした。');
+      }
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) setLoading(false);
     }
   }, []);
 
-  useEffect(() => { void fetchCards(); }, [fetchCards]);
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetchCards(controller.signal);
+    return () => controller.abort();
+  }, [fetchCards]);
 
   const nextCard = useCallback(() => {
     if (cards.length === 0) {
@@ -87,6 +97,15 @@ export default function QuizPage() {
 
           {loading && (
             <div style={{ marginBottom: 24, fontSize: 13, color: palette.sub }}>読み込み中...</div>
+          )}
+
+          {error && (
+            <div role="alert" style={{ marginBottom: 24, color: '#fca5a5' }}>
+              <p>{error}</p>
+              <button style={{ ...buttonBase, ...buttonVariants.neutral, marginTop: 8 }} onClick={() => void fetchCards()}>
+                再試行
+              </button>
+            </div>
           )}
 
           {!loading && cards.length === 0 && (

@@ -1,7 +1,6 @@
 import FriendCardList from '../components/FriendCard';
 import NavigationBar from '../components/NavigationBar';
 import StarCanvas from '../components/StarCanvas';
-// import BackToTopButton from '../components/BackTop';
 
 export default function FriendPage() {
   return (
@@ -15,9 +14,6 @@ export default function FriendPage() {
       <div className="mt-12" />
 
       <FriendCardList />
-      {/* <div className="mb-2 w-full flex justify-start">
-        <BackToTopButton />
-      </div> */}
     </main>
   );
 }

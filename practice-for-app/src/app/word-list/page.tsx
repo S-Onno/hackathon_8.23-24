@@ -3,8 +3,13 @@
 
 
 'use client';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { WordCard } from '@/types/card';
+import {
+  fetchWordCards,
+  isAbortError,
+  readWordCardResponse,
+} from '@/utils/word-card';
 
 import NightStarCanvas from "../components/StarCanvas";
 import NavigationBar from '../components/NavigationBar';
@@ -16,6 +21,7 @@ export default function CardListPage() {
   const [answer, setAnswer] = useState('');
   const [editId, setEditId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // ---------- Inline Style (CSS 不使用) ----------
   const palette = {
@@ -60,14 +66,6 @@ export default function CardListPage() {
     padding: 24,
     boxShadow: '0 4px 16px -4px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,0.02)',
     backdropFilter: 'blur(4px)'
-  };
-
-  const headingStyle: React.CSSProperties = {
-    margin: '0 0 24px',
-    fontSize: 28,
-    fontWeight: 700,
-    letterSpacing: '.5px',
-    textAlign: 'center'
   };
 
   const formStyle: React.CSSProperties = {
@@ -174,39 +172,60 @@ export default function CardListPage() {
     letterSpacing: '.5px'
   };
 
-  useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        const res = await fetch('/api/cards');
-        const data = await res.json();
-        setCards(data);
-      } finally {
-        setLoading(false);
+  const loadCards = useCallback(async (signal?: AbortSignal) => {
+    setLoading(true);
+    setError(null);
+    try {
+      setCards(await fetchWordCards(signal));
+    } catch (loadError) {
+      if (!isAbortError(loadError)) {
+        console.error('Failed to load cards:', loadError);
+        setError('カードを取得できませんでした。');
       }
-    })();
+    } finally {
+      if (!signal?.aborted) setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    void loadCards(controller.signal);
+    return () => controller.abort();
+  }, [loadCards]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
     try {
-      if (editId) {
-        await fetch('/api/cards', {
+      const isEditing = editId !== null;
+      let response: Response;
+      if (isEditing) {
+        response = await fetch('/api/cards', {
           method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id: editId, question, answer }),
         });
       } else {
-        await fetch('/api/cards', {
+        response = await fetch('/api/cards', {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ question, answer }),
         });
       }
+
+      const savedCard = await readWordCardResponse(response);
+      setCards(currentCards =>
+        isEditing
+          ? currentCards.map(card => card.id === savedCard.id ? savedCard : card)
+          : [savedCard, ...currentCards]
+      );
       setQuestion('');
       setAnswer('');
       setEditId(null);
-      const res = await fetch('/api/cards');
-      setCards(await res.json());
+    } catch (saveError) {
+      console.error('Failed to save card:', saveError);
+      setError('カードを保存できませんでした。入力内容は保持されています。');
     } finally {
       setLoading(false);
     }
@@ -221,13 +240,20 @@ export default function CardListPage() {
   const handleDelete = async (id: number) => {
     if (!confirm('削除してよろしいですか？')) return;
     setLoading(true);
+    setError(null);
     try {
-      await fetch('/api/cards', {
+      const response = await fetch('/api/cards', {
         method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id }),
       });
-      const res = await fetch('/api/cards');
-      setCards(await res.json());
+      if (!response.ok) {
+        throw new Error(`カードの削除に失敗しました (${response.status})`);
+      }
+      setCards(currentCards => currentCards.filter(card => card.id !== id));
+    } catch (deleteError) {
+      console.error('Failed to delete card:', deleteError);
+      setError('カードを削除できませんでした。');
     } finally {
       setLoading(false);
     }
@@ -278,6 +304,14 @@ export default function CardListPage() {
             </form>
             {loading && (
               <div style={{ fontSize: 12, color: palette.sub, marginBottom: 12 }}>更新中...</div>
+            )}
+            {error && (
+              <div role="alert" style={{ marginBottom: 12, color: '#fca5a5' }}>
+                <p>{error}</p>
+                <button type="button" disabled={loading} onClick={() => void loadCards()} style={{ ...buttonBase, ...buttonVariants.cancel, marginTop: 8 }}>
+                  再取得
+                </button>
+              </div>
             )}
             <ul style={cardListStyle}>
           {cards.map(card => {

@@ -13,11 +13,11 @@ type Creature = {
   stopTimer: number;
 };
 
+const PLANET_CENTER = { x: 200, y: 200 } as const;
+const PLANET_RADIUS = 150;
+
 export default function PlanetPage() {
   const [creatures, setCreatures] = useState<Creature[]>([]);
-
-  const planetCenter = { x: 200, y: 200 };
-  const planetRadius = 150;
 
   useEffect(() => {
     // 生物を初期化（必ず x, y, angle を与える）
@@ -51,15 +51,15 @@ export default function PlanetPage() {
 
           if (isMoving) {
             const rad = (angle * Math.PI) / 180;
-            let newX = x + Math.cos(rad) * c.speed;
-            let newY = y + Math.sin(rad) * c.speed;
+            const newX = x + Math.cos(rad) * c.speed;
+            const newY = y + Math.sin(rad) * c.speed;
 
-            const dx = newX - planetCenter.x;
-            const dy = newY - planetCenter.y;
+            const dx = newX - PLANET_CENTER.x;
+            const dy = newY - PLANET_CENTER.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
 
             // 外に出そうなら方向転換
-            if (dist > planetRadius - 15) {
+            if (dist > PLANET_RADIUS - 15) {
               angle = Math.random() * 360;
             } else {
               x = newX;

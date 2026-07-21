@@ -1,44 +1,40 @@
-//"use client"
-
+import Image from "next/image";
 import NavButton from "./components/NavButton";
 import NightStarCanvas from "./components/StarCanvas";
-import Image from 'next/image';
 
 export default function HomePage() {
-    return (
-        <div className="relative w-full min-h-screen">
-            {/* 下層の背景コンポーネント /}
-            <NightStarCanvas />
+  return (
+    <div className="relative min-h-screen w-full">
+      <NightStarCanvas />
+      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-black px-4 text-white">
+        <h1 className="mb-4 text-5xl font-bold tracking-wide">
+          <Image
+            src="/_images/BigUniverselogo.png"
+            alt="Universe"
+            width={300}
+            height={200}
+            priority
+          />
+        </h1>
+        <p className="mb-8 max-w-md text-center text-lg">
+          あなたの学びが、惑星を育てる。宇宙をテーマにした学習アプリで、努力を可視化しよう。
+        </p>
 
-            {/ 上層のコンテンツ */}
-            <main className="min-h-screen bg-gradient-to-b from-black text-white flex flex-col items-center justify-center px-4">
-                <NightStarCanvas />
-                <h1 className="text-5xl font-bold mb-4 tracking-wide">
-                    <Image src="/_images/BigUniverselogo.png" // 画像のパスを指定
-                            alt="Universe Logo"
-                            width={300}
-                            height={200}>
-                </Image></h1>
-                <p className="text-lg mb-8 text-center max-w-md">
-                    あなたの学びが、惑星を育てる。 宇宙をテーマにした学習アプリで、努力を可視化しよう。
-                </p>
-
-                <div className="flex gap-4">
-                    <NavButton
-                        href="/login"
-                        className="px-6 py-2 rounded hover:bg-blue-400 hover:scale-125 transform transition duration-200"
-                    >
-                        ログイン
-                    </NavButton>
-
-                    <NavButton
-                        href="/signup"
-                        className="px-6 py-2 rounded hover:bg-green-400 hover:scale-125 transform transition duration-200"
-                    >
-                        新規登録
-                    </NavButton>
-                </div>
-            </main>
+        <div className="flex gap-4">
+          <NavButton
+            href="/login"
+            className="hover:scale-110 hover:bg-blue-500"
+          >
+            ログイン
+          </NavButton>
+          <NavButton
+            href="/signup"
+            className="hover:scale-110 hover:bg-green-500"
+          >
+            新規登録
+          </NavButton>
         </div>
-    );
+      </main>
+    </div>
+  );
 }
